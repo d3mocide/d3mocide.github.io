@@ -74,6 +74,7 @@ Interesting file in `/` called `entrypoint.sh`, chmod +x gives us a command that
 ![entrypoint.sh](Pasted image 20230625155852.png)
 
 After connecting to the database we are able to query to see what tables are there. Some of the more interesting ones are shown bellow.
+
 ![msql-query](Pasted image 20230625160618.png)
 
 Using the following msql command we are able to dump all of the table contents from the user_auth table.
