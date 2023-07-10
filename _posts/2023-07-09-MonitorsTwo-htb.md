@@ -1,5 +1,5 @@
 ---
-title: HTB | MonitorsTwo - Write Up
+title: HTB | MonitorsTwo
 date: 2023-07-9 14:00:00 -500
 categories: [HTB, write-ups]
 tags: [htb,red-team,ctf]

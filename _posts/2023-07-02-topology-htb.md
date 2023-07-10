@@ -1,5 +1,5 @@
 ---
-title: HTB | Topology - Notes
+title: HTB | Topology
 date: 2023-07-2 14:00:00 -500
 categories: [HTB, write-ups]
 tags: [htb,red-team,ctf]
