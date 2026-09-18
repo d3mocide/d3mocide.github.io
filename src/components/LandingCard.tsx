@@ -81,18 +81,25 @@ const LandingCard = () => {
         {/* Spacer for the Logo (Logo is sandwiched at Z-30 from App.tsx) */}
         <div className="w-full h-[220px] pointer-events-none" />
 
+        {/*
+          Fixed-height zone below the logo spacer, so the card's total height
+          (and therefore where its vertically-centered top edge lands relative
+          to the independently-positioned logo above) stays the same whether
+          we're showing the power-on button or the boot rows filling in one
+          by one. Without this the card resizes across phases/rows and the
+          logo drifts out of alignment with the spacer built for it.
+        */}
+        <div className="min-h-[280px] w-full flex flex-col items-center justify-center relative z-10">
         {phase === 'power-on' ? (
           /* Power On Prompt */
-          <div className="pt-4 relative z-10">
-            <button
-              onClick={handlePowerOn}
-              className={`group/btn relative inline-flex items-center justify-center space-x-2 px-8 py-3.5 font-mono text-sm text-neon-green border border-neon-green/40 rounded-lg transition-all duration-200 hover:bg-neon-green/10 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(0,255,65,0.3)] ${chromaticClass}`}
-            >
-                <span>&gt;_</span>
-                <span className="tracking-widest">INITIALIZE SYSTEM</span>
-                <span className="w-2 h-4 bg-neon-green animate-pulse" />
-            </button>
-          </div>
+          <button
+            onClick={handlePowerOn}
+            className={`group/btn relative inline-flex items-center justify-center space-x-2 px-8 py-3.5 font-mono text-sm text-neon-green border border-neon-green/40 rounded-lg transition-all duration-200 hover:bg-neon-green/10 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(0,255,65,0.3)] ${chromaticClass}`}
+          >
+              <span>&gt;_</span>
+              <span className="tracking-widest">INITIALIZE SYSTEM</span>
+              <span className="w-2 h-4 bg-neon-green animate-pulse" />
+          </button>
         ) : (
           /* Boot Sequence */
           <div className="w-full relative z-40">
@@ -110,6 +117,7 @@ const LandingCard = () => {
             </p>
           </div>
         )}
+        </div>
 
       </div>
     </div>
