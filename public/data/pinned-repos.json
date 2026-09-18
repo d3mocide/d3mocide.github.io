@@ -1,0 +1,49 @@
+{
+  "username": "d3mocide",
+  "updatedAt": null,
+  "error": "placeholder data — run `npm run fetch:pinned` with GITHUB_TOKEN set, or wait for the deploy workflow to sync",
+  "repos": [
+    {
+      "id": "meshrf",
+      "name": "meshrf",
+      "description": "Radio frequency propagation modeling tool for mesh network planning.",
+      "url": "https://github.com/d3mocide/meshrf",
+      "homepageUrl": "https://meshrf.net",
+      "stars": null,
+      "forks": null,
+      "isArchived": false,
+      "language": null,
+      "languageColor": null,
+      "topics": [],
+      "flashable": false
+    },
+    {
+      "id": "d3_os",
+      "name": "d3_os",
+      "description": "React-based operating system simulation. You are here.",
+      "url": "https://github.com/d3mocide/d3_os",
+      "homepageUrl": "https://d3frag.net",
+      "stars": null,
+      "forks": null,
+      "isArchived": false,
+      "language": null,
+      "languageColor": null,
+      "topics": [],
+      "flashable": false
+    },
+    {
+      "id": "Sovereign_Watch",
+      "name": "Sovereign_Watch",
+      "description": "Distributed Multi-INT Fusion Center designed for decentralized situational awareness.",
+      "url": "https://github.com/d3mocide/Sovereign_Watch",
+      "homepageUrl": null,
+      "stars": null,
+      "forks": null,
+      "isArchived": false,
+      "language": null,
+      "languageColor": null,
+      "topics": [],
+      "flashable": false
+    }
+  ]
+}
