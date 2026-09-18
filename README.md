@@ -20,24 +20,16 @@
 - 🎯 **Start Menu** - Application launcher with system controls
 - ⚡ **Shutdown/Logout** - CRT-off animation and session management
 
+## 🌍 Live Site
+
+Deployed to [d3frag.net](https://d3frag.net) via GitHub Pages — every push to `main` triggers a build and deploy.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Docker & Docker Compose
+- Docker & Docker Compose (for containerized dev), or Node.js 20+
 - Git
-
-### Installation (Production)
-
-To run the production version (pulls the latest image from GHCR):
-
-```bash
-# Start the production environment
-docker compose -f docker-compose.yml up -d
-
-# Access the OS
-open http://localhost:31337
-```
 
 ### Development
 
@@ -55,6 +47,13 @@ docker compose -f docker-compose.dev.yml logs -f
 
 # Stop the environment
 docker compose -f docker-compose.dev.yml down
+```
+
+Or without Docker:
+
+```bash
+npm install
+npm run dev
 ```
 
 ## 🛠️ Tech Stack
@@ -81,8 +80,8 @@ d3_os/
 │   ├── hooks/             # Custom React hooks
 │   └── assets/            # Static assets
 ├── public/                # Public assets
-├── Dockerfile             # Docker configuration
-└── docker-compose.yml     # Docker Compose setup
+├── Dockerfile             # Docker configuration (local dev)
+└── docker-compose.dev.yml # Docker Compose setup (local dev)
 ```
 
 ## 🎮 Usage
