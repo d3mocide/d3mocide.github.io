@@ -13,6 +13,10 @@ export interface PinnedRepo {
   languageColor: string | null;
   topics: string[];
   flashable: boolean;
+  manifestUrl: string | null;
+  firmwareName: string | null;
+  firmwareVersion: string | null;
+  chipFamilies: string[];
 }
 
 interface PinnedReposData {
