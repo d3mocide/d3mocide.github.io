@@ -1,3 +1,4 @@
+import { LazyMotion, domAnimation } from 'framer-motion';
 import { useOSStore } from '@/store/useOSStore';
 import MatrixRain from '@/components/MatrixRain';
 import LandingCard from '@/components/LandingCard';
@@ -9,8 +10,9 @@ function App() {
   const { isBooting, isShutDown } = useOSStore();
 
   return (
+    <LazyMotion features={domAnimation} strict>
     <div className="relative min-h-screen w-full overflow-hidden bg-bg-void text-gray-100 flex items-center justify-center">
-      
+
       {/* Persistent Background FX */}
       <MatrixRain />
       
@@ -48,6 +50,7 @@ function App() {
       
       {/* Footer - Moved into Desktop/Taskbar or removed to avoid overlap */}
     </div>
+    </LazyMotion>
   )
 }
 

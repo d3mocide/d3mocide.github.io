@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import Draggable from 'react-draggable';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { X, Minus } from 'lucide-react';
 import { Resizable } from 're-resizable';
 import { useOSStore } from '@/store/useOSStore';
@@ -73,7 +73,7 @@ const WindowFrame = ({
     return (
       <div className="fixed inset-0 pb-20 p-2" style={{ zIndex: windowState.zIndex }}>
         <AnimatePresence>
-          <motion.div
+          <m.div
             className="h-full w-full flex flex-col"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -81,7 +81,7 @@ const WindowFrame = ({
             transition={{ duration: 0.15 }}
           >
             {frameBody}
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
     );
@@ -101,7 +101,7 @@ const WindowFrame = ({
         style={{ zIndex: windowState.zIndex }}
       >
         <AnimatePresence>
-          <motion.div
+          <m.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
@@ -120,7 +120,7 @@ const WindowFrame = ({
             >
                 {frameBody}
             </Resizable>
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
     </Draggable>
