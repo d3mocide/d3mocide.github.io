@@ -29,7 +29,6 @@ const Terminal = () => {
         focusInput();
         document.addEventListener('click', focusInput);
         return () => document.removeEventListener('click', focusInput);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleCommand = (cmd: string) => {

@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { Power, Settings, Folder, Terminal, User, LogOut } from 'lucide-react';
 import { useOSStore } from '@/store/useOSStore';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 
 interface StartMenuProps {
   isOpen: boolean;
@@ -35,7 +35,7 @@ const StartMenu = ({ isOpen, onClose }: StartMenuProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <m.div
           ref={menuRef}
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -100,7 +100,7 @@ const StartMenu = ({ isOpen, onClose }: StartMenuProps) => {
                     <span className="text-xs font-medium">Shutdown</span>
                 </button>
             </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );
