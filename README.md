@@ -13,7 +13,8 @@
 
 - 🪟 **Window Management** - Draggable, resizable windows with z-index stacking
 - 💻 **Terminal Application** - Interactive command-line interface with easter eggs
-- 📁 **Project Explorer** - Portfolio showcase with live deployment links
+- 📁 **Project Explorer** - Portfolio showcase, live-synced with your pinned GitHub repos
+- ⚡ **Web Flasher** - Flash firmware to SBCs/microcontrollers over USB via Web Serial
 - 🌐 **Integrated Browser** - Iframe-based web browser within the OS
 - 🎨 **Cyberpunk Aesthetics** - Matrix rain, scanlines, glitch effects, neon colors
 - 🔊 **Audio System** - Immersive sound effects for interactions
@@ -74,14 +75,16 @@ d3_os/
 ├── src/
 │   ├── components/
 │   │   ├── apps/          # Application components
-│   │   ├── os/            # OS shell components
-│   │   └── fx/            # Visual effects
-│   ├── store/             # Zustand state management
-│   ├── hooks/             # Custom React hooks
-│   └── assets/            # Static assets
-├── public/                # Public assets
-├── Dockerfile             # Docker configuration (local dev)
-└── docker-compose.dev.yml # Docker Compose setup (local dev)
+│   │   ├── os/             # OS shell components
+│   │   └── fx/             # Visual effects
+│   ├── config/             # Static app config (e.g. flashTargets.ts)
+│   ├── store/              # Zustand state management
+│   ├── hooks/              # Custom React hooks
+│   └── assets/             # Static assets
+├── scripts/                # Build-time scripts (e.g. pinned-repo sync)
+├── public/                 # Public assets (incl. data/pinned-repos.json)
+├── Dockerfile              # Docker configuration (local dev)
+└── docker-compose.dev.yml  # Docker Compose setup (local dev)
 ```
 
 ## 🎮 Usage
@@ -90,6 +93,8 @@ d3_os/
 
 - `help` - Display available commands
 - `list` - Show installed applications
+- `projects` - Launch Project Explorer
+- `flasher` - Launch Web Flasher
 - `clear` - Clear terminal output
 - `whoami` - Display system information
 - `matrix` - Enable Matrix mode
@@ -98,8 +103,42 @@ d3_os/
 ### Applications
 
 - **D3_TERM** - Interactive terminal
-- **PROJECT_EXPLORER** - Portfolio browser
+- **PROJECT_EXPLORER** - Portfolio browser, live-synced with pinned GitHub repos
+- **WEB_FLASHER** - Flash firmware to SBCs/microcontrollers over USB
 - **BROWSER** - Integrated web browser
+
+## 📌 Pinned Repos Sync
+
+d3_OS is a static site with no backend, and GitHub's public REST API doesn't expose "pinned repos." Instead, the
+`Deploy to GitHub Pages` workflow runs `scripts/fetch-pinned-repos.mjs` before every build, which queries GitHub's
+GraphQL API for your pinned repositories and writes the result to `public/data/pinned-repos.json`. The Project
+Explorer app fetches that static file at runtime — no token ever ships to the browser.
+
+To enable it:
+
+1. Create a token with public read access (a fine-grained PAT scoped to **Public Repositories (read-only)**, or a
+   classic PAT with no scopes, both work since pinned repos are public data).
+2. Add it as a repository secret named `PINNED_REPOS_TOKEN`.
+3. The workflow re-syncs on every push to `main`, on `workflow_dispatch`, and daily via a scheduled cron job.
+
+Without the secret, the build falls back to the placeholder data committed at `public/data/pinned-repos.json` — the
+app still works, it just won't reflect live star counts or newly pinned repos. Run `npm run fetch:pinned` locally
+(with `GITHUB_TOKEN` set in your shell) to refresh that file yourself.
+
+## ⚡ Web Flasher
+
+The Web Flasher app uses [esp-web-tools](https://esphome.github.io/esp-web-tools/) (Web Serial) to flash ESP32/ESP8266
+firmware straight from the browser — no drivers or CLI. It only works in Chromium-based browsers (Chrome/Edge) served
+over HTTPS or localhost.
+
+Flashable projects are config-driven in `src/config/flashTargets.ts`. To add one:
+
+1. Build and publish your firmware binaries plus a `manifest.json` (the format `esp-web-tools` expects — see its
+   [docs](https://esphome.github.io/esp-web-tools/)) somewhere with permissive CORS, such as the project's own GitHub
+   Pages site, a GitHub Release asset, or this repo's `public/firmware/<project>/`.
+2. Add an entry to `flashTargets` with the project name, board, and `manifestUrl`.
+3. Optionally tag the project's GitHub repo with the `web-flasher` topic — the Project Explorer app picks that up
+   automatically and shows a **FLASH** shortcut on the matching project card that deep-links into this app.
 
 ## 🎨 Design System
 

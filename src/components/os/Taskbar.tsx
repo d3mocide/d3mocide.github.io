@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useOSStore } from '@/store/useOSStore';
 import { useSoundFX } from '@/hooks/useSoundFX';
-import { Terminal, LayoutGrid, Monitor } from 'lucide-react';
+import { Terminal, LayoutGrid, Monitor, Zap } from 'lucide-react';
 import { useIP } from '@/hooks/useIP';
 import StartMenu from './StartMenu';
 
@@ -56,6 +56,13 @@ const Taskbar = () => {
             onClick={() => { playClick(); openWindow('projects', 'PROJECT_EXPLORER'); }}
         >
             <LayoutGrid size={18} />
+        </button>
+        <button
+            className="p-2 text-neon-green hover:text-white transition-colors"
+            title="Web Flasher"
+            onClick={() => { playClick(); openWindow('flasher', 'WEB_FLASHER'); }}
+        >
+            <Zap size={18} />
         </button>
       </div>
 

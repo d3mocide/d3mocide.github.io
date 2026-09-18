@@ -23,5 +23,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Fetch pinned repos
+        run: npm run fetch:pinned
+
       - name: Build
         run: npm run build

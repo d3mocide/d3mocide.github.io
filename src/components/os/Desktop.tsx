@@ -8,6 +8,7 @@ const Terminal = lazy(() => import('@/components/apps/Terminal'));
 const ProjectExplorer = lazy(() => import('@/components/apps/ProjectExplorer'));
 const Browser = lazy(() => import('@/components/apps/Browser'));
 const Settings = lazy(() => import('@/components/apps/Settings'));
+const WebFlasher = lazy(() => import('@/components/apps/WebFlasher'));
 
 // Content mapping
 const WindowContent = ({ id }: { id: string }) => {
@@ -18,6 +19,7 @@ const WindowContent = ({ id }: { id: string }) => {
   if (id === 'terminal') return <Terminal />;
   if (id === 'projects') return <ProjectExplorer />;
   if (id === 'settings') return <Settings />;
+  if (id === 'flasher') return <WebFlasher highlightId={data.projectId} />;
   
   if (id.startsWith('browser_') || data.type === 'browser') {
       return <Browser initialUrl={data.url} />;
@@ -35,6 +37,7 @@ const Desktop = () => {
         if (id === 'terminal') return { defaultSize: { width: 650, height: 400 } };
         if (id === 'projects') return { defaultSize: { width: 800, height: 500 } };
         if (id === 'settings') return { defaultSize: { width: 450, height: 600 } };
+        if (id === 'flasher') return { defaultSize: { width: 800, height: 560 } };
         if (id.startsWith('browser_') || data?.type === 'browser') {
             return { defaultSize: { width: 1024, height: 720 }, minSize: { width: 600, height: 400 } };
         }

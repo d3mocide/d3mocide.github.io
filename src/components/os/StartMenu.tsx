@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { Power, Settings, Folder, Terminal, User, LogOut } from 'lucide-react';
+import { Power, Settings, Folder, Terminal, User, LogOut, Zap } from 'lucide-react';
 import { useOSStore } from '@/store/useOSStore';
 import { m, AnimatePresence } from 'framer-motion';
 
@@ -74,7 +74,15 @@ const StartMenu = ({ isOpen, onClose }: StartMenuProps) => {
                     <span className="text-sm font-medium">Projects</span>
                 </button>
 
-                 <button 
+                <button
+                  onClick={() => handleItemClick(() => openWindow('flasher', 'WEB_FLASHER'))}
+                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors group"
+                >
+                    <Zap size={18} className="text-neon-green group-hover:text-white transition-colors" />
+                    <span className="text-sm font-medium">Web Flasher</span>
+                </button>
+
+                 <button
                   onClick={() => handleItemClick(() => openWindow('settings', 'SYSTEM_CONFIG'))}
                   className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors group"
                 >

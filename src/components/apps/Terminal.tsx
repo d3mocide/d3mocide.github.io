@@ -40,6 +40,7 @@ const Terminal = () => {
                     'AVAILABLE COMMANDS:',
                     '  about     - WHOAMI / System Info',
                     '  projects  - Launch Portfolio Explorer',
+                    '  flasher   - Launch Web Flasher',
                     '  clear     - Clear terminal history',
                     '  exit      - Close terminal session',
                     '  sudo      - Execute as superuser'
@@ -52,6 +53,9 @@ const Terminal = () => {
             case 'projects':
                 openWindow('projects', 'PROJECT_EXPLORER');
                 return 'Launching Project Explorer...';
+            case 'flasher':
+                openWindow('flasher', 'WEB_FLASHER');
+                return 'Launching Web Flasher...';
             case 'exit':
                 closeWindow('terminal');
                 return null;
