@@ -7,11 +7,15 @@ export interface FlashTarget {
   docsUrl?: string;
 }
 
-// Add one entry per project once its manifest.json + firmware binaries are
-// published (see README.md > "Web Flasher" for the manifest.json schema that
-// esp-web-tools expects, and where to host it). `id` should match the
-// corresponding project/pinned-repo id so the Projects app's FLASH button can
-// deep-link here.
+// Firmware targets are normally auto-discovered: any pinned GitHub repo that
+// publishes an esp-web-tools manifest at `firmware/manifest.json` on its
+// default branch shows up in the Web Flasher automatically (no edits here —
+// see scripts/fetch-pinned-repos.mjs and README.md > "Web Flasher").
+//
+// Use this file only for one-off overrides — e.g. a manifest hosted outside
+// GitHub, or a project that isn't (or can't be) pinned. Entries here are
+// skipped if their `id` matches an auto-discovered project, so they never
+// show up twice.
 //
 // Example:
 // {

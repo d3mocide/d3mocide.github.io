@@ -140,14 +140,28 @@ The Web Flasher app uses [esp-web-tools](https://esphome.github.io/esp-web-tools
 firmware straight from the browser — no drivers or CLI. It only works in Chromium-based browsers (Chrome/Edge) served
 over HTTPS or localhost.
 
-Flashable projects are config-driven in `src/config/flashTargets.ts`. To add one:
+**Firmware targets are auto-discovered — no d3_OS changes needed per project.** The same
+`scripts/fetch-pinned-repos.mjs` sync that powers the Project Explorer also checks every pinned repo for a
+`firmware/manifest.json` on its default branch (GitHub's GraphQL API can read a file's contents directly, so this
+costs no extra API calls). If it finds one and it looks like a valid `esp-web-tools` manifest (has a `builds` array),
+that project automatically shows up in the Web Flasher — pulled via `raw.githubusercontent.com`, which serves repo
+files with CORS already enabled, so no GitHub Pages or release setup is required.
 
-1. Build and publish your firmware binaries plus a `manifest.json` (the format `esp-web-tools` expects — see its
-   [docs](https://esphome.github.io/esp-web-tools/)) somewhere with permissive CORS, such as the project's own GitHub
-   Pages site, a GitHub Release asset, or this repo's `public/firmware/<project>/`.
-2. Add an entry to `flashTargets` with the project name, board, and `manifestUrl`.
-3. Optionally tag the project's GitHub repo with the `web-flasher` topic — the Project Explorer app picks that up
-   automatically and shows a **FLASH** shortcut on the matching project card that deep-links into this app.
+To make a pinned project flashable:
+
+1. Build your firmware and write an `esp-web-tools` manifest (see its
+   [docs](https://esphome.github.io/esp-web-tools/) for the format — `name`, `version`, and a `builds` array of
+   `{ chipFamily, parts: [{ path, offset }] }`).
+2. Commit the manifest to `firmware/manifest.json` in the repo, alongside the `.bin` file(s) it references by
+   relative path (e.g. `firmware/esp32s3.bin`), and push to the default branch.
+3. Wait for the next sync (every push to `d3_os`'s `main`, `workflow_dispatch`, or the daily cron — see "Pinned Repos
+   Sync" above), or run `npm run fetch:pinned` locally to check sooner.
+
+The Project Explorer's **FLASH** shortcut on that project's card deep-links straight into this app.
+
+For anything that can't be pinned on GitHub, or whose manifest lives elsewhere, add a manual entry to
+`src/config/flashTargets.ts` instead — entries there are skipped automatically if their `id` matches an
+auto-discovered project, so nothing ever shows up twice.
 
 ## 🎨 Design System
 
