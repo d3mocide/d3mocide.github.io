@@ -109,10 +109,14 @@ d3_os/
 
 ## 📌 Pinned Repos Sync
 
-d3_OS is a static site with no backend, and GitHub's public REST API doesn't expose "pinned repos." Instead, the
+Every card in the Project Explorer is generated directly from your GitHub pinned repos — there's no hardcoded
+project list to keep in sync by hand. Pin or unpin something on your GitHub profile and it shows up (or disappears)
+here on the next sync, with live star/fork counts and description pulled straight from GitHub.
+
+d3_OS is a static site with no backend, and GitHub's public REST API doesn't expose "pinned repos," so the
 `Deploy to GitHub Pages` workflow runs `scripts/fetch-pinned-repos.mjs` before every build, which queries GitHub's
 GraphQL API for your pinned repositories and writes the result to `public/data/pinned-repos.json`. The Project
-Explorer app fetches that static file at runtime — no token ever ships to the browser.
+Explorer app just fetches that static file at runtime — no token ever ships to the browser.
 
 To enable it:
 
@@ -121,9 +125,14 @@ To enable it:
 2. Add it as a repository secret named `PINNED_REPOS_TOKEN`.
 3. The workflow re-syncs on every push to `main`, on `workflow_dispatch`, and daily via a scheduled cron job.
 
-Without the secret, the build falls back to the placeholder data committed at `public/data/pinned-repos.json` — the
-app still works, it just won't reflect live star counts or newly pinned repos. Run `npm run fetch:pinned` locally
-(with `GITHUB_TOKEN` set in your shell) to refresh that file yourself.
+Without the secret, the build falls back to the static snapshot committed at `public/data/pinned-repos.json` — the
+app still works, it just won't reflect live star counts or newly pinned/unpinned repos. Run `npm run fetch:pinned`
+locally (with `GITHUB_TOKEN` set in your shell) to refresh that file yourself.
+
+Each card links to its GitHub repo (**SOURCE**) and, when GitHub has a homepage URL set for that repo, out to the
+live site in a new tab (**SITE**) — there's no in-OS iframe preview, since not every repo has one and many sites
+block being embedded anyway. Want a repo's live site linked? Set its homepage URL on GitHub
+(repo page → ⚙️ next to "About").
 
 ## ⚡ Web Flasher
 
