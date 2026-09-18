@@ -26,4 +26,26 @@ export interface FlashTarget {
 //   manifestUrl: 'https://meshrf.net/firmware/manifest.json',
 //   docsUrl: 'https://github.com/d3mocide/meshrf#flashing',
 // },
-export const flashTargets: FlashTarget[] = [];
+export const flashTargets: FlashTarget[] = [
+  {
+    id: 'loratrace-rx',
+    project: 'LoRaTrace RX',
+    board: 'ESP32-S3',
+    description: 'Passive LoRa and sub-GHz field logging',
+    // Not auto-discoverable: manifest is a CI build artifact deployed to the
+    // project's own GitHub Pages site, never committed to firmware/manifest.json.
+    manifestUrl: 'https://d3frag.net/LoRaTrace-RX/manifest-stable.json',
+    docsUrl: 'https://github.com/d3mocide/LoRaTrace-RX',
+  },
+  {
+    id: 'openmanet-xiao-gateway',
+    project: 'OpenMANET XIAO Gateway',
+    board: 'ESP32-S3',
+    description:
+      'Firmware for a Seeed XIAO ESP32-S3 + Seeed XIAO WM6108 (HaLow) node that acts as a mesh-connected access point for the OpenMANET project.',
+    // Not auto-discoverable: manifest is a CI build artifact deployed to the
+    // project's own GitHub Pages site, never committed to firmware/manifest.json.
+    manifestUrl: 'https://d3frag.net/OpenMANET-XIAO-Gateway/manifest.json',
+    docsUrl: 'https://github.com/d3mocide/OpenMANET-XIAO-Gateway',
+  },
+];
