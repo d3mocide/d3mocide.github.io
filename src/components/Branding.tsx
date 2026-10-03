@@ -1,5 +1,5 @@
 import React from 'react';
-import DotLogo from '@/components/DotLogo';
+import AsciiLogo from '@/components/AsciiLogo';
 
 interface BrandingProps {
     className?: string;
@@ -9,7 +9,7 @@ interface BrandingProps {
 const Branding: React.FC<BrandingProps> = ({ className = '', showNetworks = true }) => {
     return (
         <div className={`relative flex flex-col items-center justify-center pointer-events-none select-none ${className}`}>
-            <DotLogo showNetworks={showNetworks} />
+            <AsciiLogo showNetworks={showNetworks} />
         </div>
     );
 };

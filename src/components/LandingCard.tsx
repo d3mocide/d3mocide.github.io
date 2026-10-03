@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useOSStore } from '@/store/useOSStore';
 import { useSoundFX } from '@/hooks/useSoundFX';
 import { useChromaticClick } from '@/hooks/useChromaticClick';
+import ScrambleText from '@/components/fx/ScrambleText';
 
 type Phase = 'power-on' | 'post' | 'warping';
 
@@ -23,6 +24,16 @@ const BOOT_ROWS: BootRow[] = [
 
 const LINE_INTERVAL = 140; // ms between each boot row appearing
 const POST_HOLD = 550; // ms to hold once all rows are shown before auto-continuing
+
+const SPIN = '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏';
+const Spinner = () => {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setI((n) => (n + 1) % SPIN.length), 80);
+    return () => clearInterval(id);
+  }, []);
+  return <span aria-hidden>{SPIN[i]}</span>;
+};
 
 const LandingCard = () => {
   const { setBooting } = useOSStore();
@@ -63,18 +74,22 @@ const LandingCard = () => {
     <div className={`relative z-20 w-full max-w-3xl mx-auto flex flex-col items-center transition-all duration-1000 ${phase === 'warping' ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
 
       {/* Title-screen panel */}
-      <div className="bg-black/70 border border-neon-green/25 rounded-[3px] p-8 md:p-12 w-full flex flex-col items-center relative overflow-hidden">
+      <div className="bg-black/70 border border-neon-green/25 rounded-[3px] p-8 md:p-12 w-full flex flex-col items-center relative">
+
+        {/* Box-drawing title tab sitting on the top border */}
+        <div aria-hidden className="absolute -top-2.5 left-6 bg-bg-void px-2 font-mono text-[11px] tracking-widest text-neon-green/70">┤ d3_OS // BOOT ├</div>
+        <div aria-hidden className="absolute -bottom-2.5 right-6 bg-bg-void px-2 font-mono text-[11px] tracking-widest text-gray-600">┤ v3.0.4 ├</div>
 
         {/* Status chip */}
         <div className="relative z-40 mb-8">
             <div className="inline-flex items-center space-x-2 border border-neon-green/40 rounded-[3px] px-3 py-1 font-mono text-[10px] tracking-[0.25em] uppercase text-neon-green">
                 <span aria-hidden className="animate-pulse">●</span>
-                <span>{phase === 'power-on' ? 'System Standby' : 'System Online'}</span>
+                <ScrambleText key={phase} text={phase === 'power-on' ? 'SYSTEM STANDBY' : 'SYSTEM ONLINE'} />
             </div>
         </div>
 
         {/* Spacer for the Logo (Logo is sandwiched at Z-30 from App.tsx) */}
-        <div className="w-full h-[220px] pointer-events-none" />
+        <div className="w-full h-[250px] pointer-events-none" />
 
         {/*
           Fixed-height zone below the logo spacer, so the card's total height
@@ -100,12 +115,12 @@ const LandingCard = () => {
                     <span className={row.color === 'green' ? 'text-neon-green' : 'text-gray-600'}>{row.color === 'green' ? '[ OK ]' : '[ -- ]'}</span>
                     <span className="text-gray-500">{row.label}</span>
                     <span aria-hidden className="flex-1 border-b border-dotted border-white/15 translate-y-[-3px]" />
-                    <span className={row.color === 'green' ? 'text-neon-green' : 'text-white'}>{row.value}</span>
+                    <ScrambleText className={row.color === 'green' ? 'text-neon-green' : 'text-white'} text={row.value} duration={320} />
                 </div>
             ))}
 
             <p className={`mt-6 text-center text-xs tracking-[0.3em] uppercase transition-opacity duration-300 ${visibleRows >= BOOT_ROWS.length ? 'text-neon-green opacity-100' : 'opacity-0'}`}>
-                Starting Desktop Shell<span className="animate-pulse">_</span>
+                <Spinner /> Starting Desktop Shell<span className="animate-pulse">_</span>
             </p>
           </div>
         )}

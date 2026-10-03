@@ -1,6 +1,6 @@
 import { LazyMotion, domAnimation } from 'framer-motion';
 import { useOSStore } from '@/store/useOSStore';
-import DotField from '@/components/fx/DotField';
+import AsciiField from '@/components/fx/AsciiField';
 import LandingCard from '@/components/LandingCard';
 import Desktop from '@/components/os/Desktop';
 import Scanlines from '@/components/fx/Scanlines';
@@ -14,7 +14,7 @@ function App() {
     <div className="relative min-h-screen w-full overflow-hidden bg-bg-void text-gray-100 flex items-center justify-center">
 
       {/* Persistent Background FX */}
-      <DotField />
+      <AsciiField />
       
       {/* Background Branding - Stays behind windows but in front of wallpaper */}
       {/* When booting: Z-30 & Moved UP to align with Card Gap */}
