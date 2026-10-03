@@ -54,7 +54,7 @@ const WindowFrame = ({
   const w = Math.min(saved?.w ?? num(defaultSize.width, 600), vp.w);
   const h = Math.min(saved?.h ?? num(defaultSize.height, 400), areaH);
   const x = Math.max(0, Math.min(saved?.x ?? initialPos.x, vp.w - Math.min(w, vp.w)));
-  const y = Math.max(0, Math.min(saved?.y ?? initialPos.y, areaH - 40));
+  const y = Math.max(0, Math.min(saved?.y ?? initialPos.y, areaH - h));
   const maximized = !!saved?.maximized && !isMobile;
 
   const toggleMaximize = () => setWindowGeometry(id, { x, y, w, h, maximized: !maximized });

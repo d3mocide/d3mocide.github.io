@@ -164,6 +164,9 @@ const Terminal = () => {
                         '  Alt+[ / ]   previous / next window',
                         '  Alt+W       close   Alt+N  minimize',
                         '  Alt+Enter   maximize / restore',
+                        '  Alt+←/→     snap to left / right half',
+                        '  Alt+D       show desktop',
+                        '  right-click the desktop for a quick menu',
                     ].join('\n'),
                 };
             case 'reboot':

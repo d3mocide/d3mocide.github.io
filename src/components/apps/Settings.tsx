@@ -106,6 +106,8 @@ const Settings = () => {
           <div className="flex justify-between"><span className="text-gray-400">Prev / next</span><span className="text-neon-green">Alt+[ ]</span></div>
           <div className="flex justify-between"><span className="text-gray-400">Close</span><span className="text-neon-green">Alt+W</span></div>
           <div className="flex justify-between"><span className="text-gray-400">Maximize</span><span className="text-neon-green">Alt+Enter</span></div>
+          <div className="flex justify-between"><span className="text-gray-400">Snap left / right</span><span className="text-neon-green">Alt+←/→</span></div>
+          <div className="flex justify-between"><span className="text-gray-400">Show desktop</span><span className="text-neon-green">Alt+D</span></div>
         </div>
         <div className="px-1 flex items-center gap-3 text-xs text-gray-500">
           <TextButton boxed tone="gray" onClick={resetLayout}>RESET WINDOW LAYOUT</TextButton>

@@ -19,7 +19,7 @@ const QUICK = [
 
 // Status-line style taskbar: square, hairline, monospace chips.
 const Taskbar = () => {
-  const { windows, activeWindowId, focusWindow, openWindow, showDesktop } = useOSStore();
+  const { windows, activeWindowId, focusWindow, minimizeWindow, openWindow, showDesktop, toggleDesktop } = useOSStore();
   const isMobile = useIsMobile();
   const { playClick } = useSoundFX();
   const { ip } = useIP();
@@ -84,7 +84,8 @@ const Taskbar = () => {
           return (
             <button
               key={win.id}
-              onClick={() => { playClick(); focusWindow(win.id); }}
+              onClick={() => { playClick(); if (focused && !isMobile) minimizeWindow(win.id); else focusWindow(win.id); }}
+              onAuxClick={(e) => { if (e.button === 1) useOSStore.getState().closeWindow(win.id); }}
               className={`h-7 max-md:h-10 px-2 border rounded-[3px] min-w-[96px] max-md:min-w-[84px] max-w-[190px] max-md:shrink-0 truncate text-left transition-colors ${
                 focused
                   ? 'bg-neon-green/15 border-neon-green/60 text-neon-green'
@@ -103,7 +104,13 @@ const Taskbar = () => {
       <div className="flex items-center gap-3 pl-2 max-md:pl-1 md:border-l border-neon-green/30 text-neon-green shrink-0">
         <span className="hidden md:inline text-gray-400">NET <span className="text-neon-blue">{ip}</span></span>
         <span className="hidden md:inline text-gray-400">CPU <span className="text-neon-green">{cpuBar(cpu)}</span> {cpu}%</span>
-        <span className="text-neon-yellow">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        <span className="text-neon-yellow" title={time.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        <button
+          aria-label="Show desktop"
+          title="Show desktop (Alt+D)"
+          onClick={() => { playClick(); toggleDesktop(); }}
+          className="hidden md:block h-7 w-3 -mr-1 border-l border-neon-green/30 hover:bg-neon-green/15"
+        />
       </div>
     </div>
   );

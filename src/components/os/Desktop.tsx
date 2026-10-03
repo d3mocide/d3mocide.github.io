@@ -1,8 +1,9 @@
-import { useEffect, lazy, Suspense } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { useOSStore } from '@/store/useOSStore';
 import WindowFrame from './WindowFrame';
 import Taskbar from './Taskbar';
 import DesktopIcons from './DesktopIcons';
+import ContextMenu from './ContextMenu';
 import { useShortcuts } from '@/hooks/useShortcuts';
 import { TASKBAR_H } from './WindowFrame';
 
@@ -42,6 +43,7 @@ const WindowContent = ({ id }: { id: string }) => {
 const Desktop = () => {
     const { windows, openWindow, snapHint } = useOSStore();
     useShortcuts(true);
+    const [menuAt, setMenuAt] = useState<{ x: number; y: number } | null>(null);
     
     const getWindowConfig = (id: string, data: any) => {
         if (id === 'terminal') return { defaultSize: { width: 650, height: 400 } };
@@ -65,7 +67,15 @@ const Desktop = () => {
     }, [windows, openWindow]);
 
     return (
-        <div className="relative w-full h-[100dvh] overflow-hidden">
+        <div
+            className="relative w-full h-[100dvh] overflow-hidden"
+            onContextMenu={(e) => {
+                // only the bare desktop gets the menu; windows, icons and text fields keep the browser's
+                if ((e.target as HTMLElement).closest('[data-os-ui], input, textarea')) return;
+                e.preventDefault();
+                setMenuAt({ x: e.clientX, y: e.clientY });
+            }}
+        >
             
             {/* Desktop icons sit under the windows (DOM order) */}
             <DesktopIcons />
@@ -109,6 +119,7 @@ const Desktop = () => {
 
             {/* Taskbar Layer */}
             <Taskbar />
+            <ContextMenu at={menuAt} onClose={() => setMenuAt(null)} />
         </div>
     );
 };
