@@ -13,7 +13,9 @@ interface HistoryItem {
 }
 
 const PROMPT = 'guest@d3frag:~$';
-const COMMANDS = ['about', 'banner', 'cat', 'clear', 'date', 'echo', 'exit', 'flasher', 'help', 'keys', 'ls', 'matrix', 'mesh', 'neofetch', 'open', 'ping', 'projects', 'reboot', 'settings', 'sudo', 'theme', 'whoami', 'whois'];
+const COMMANDS = ['about', 'banner', 'cat', 'clear', 'date', 'echo', 'exit', 'flasher', 'game', 'help', 'keys', 'ls', 'matrix', 'mesh', 'neofetch', 'open', 'ping', 'projects', 'reboot', 'settings', 'sudo', 'theme', 'whoami', 'whois'];
+
+const QUICK_CMDS = ['help', 'about', 'projects', 'mesh', 'game', 'theme', 'neofetch', 'clear'];
 
 const HELP = [
   'AVAILABLE COMMANDS',
@@ -27,6 +29,7 @@ const HELP = [
   '  mesh         open the Mesh Map',
   '  projects     launch Project Explorer',
   '  flasher      launch Web Flasher',
+  '  game         play PACKET_LOSS',
   '  settings     open System Config',
   '  theme [name] list or switch theme',
   '  matrix       take the red pill',
@@ -69,12 +72,10 @@ const Terminal = () => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [history]);
 
-    // Keep focus on input
+    // Desktop: keep the cursor in the prompt. On touch screens focusing pops the keyboard over
+    // everything, so only do it when the user taps the prompt itself (see the container's onClick).
     useEffect(() => {
-        const focusInput = () => inputRef.current?.focus();
-        focusInput();
-        document.addEventListener('click', focusInput);
-        return () => document.removeEventListener('click', focusInput);
+        if (!window.matchMedia?.('(pointer: coarse)').matches) inputRef.current?.focus();
     }, []);
 
     // Returns the output (and how to style it), null for no output, or throws for an error.
@@ -193,6 +194,10 @@ const Terminal = () => {
             case 'flasher':
                 openWindow('flasher', 'WEB_FLASHER');
                 return { type: 'output', content: 'Launching Web Flasher...' };
+            case 'game':
+            case 'play':
+                openWindow('game', 'PACKET_LOSS');
+                return { type: 'output', content: 'Routing packets... good luck.' };
             case 'settings':
                 openWindow('settings', 'SYSTEM_CONFIG');
                 return { type: 'output', content: 'Opening System Config...' };
@@ -206,24 +211,28 @@ const Terminal = () => {
         }
     };
 
+    const run = (line: string) => {
+        const newHistory: HistoryItem[] = [...history, { type: 'input', content: line }];
+        if (line.trim()) past.current.push(line);
+        cursor.current = -1;
+
+        try {
+            const output = handleCommand(line);
+            if (output) newHistory.push(output);
+        } catch (err: unknown) {
+            playError();
+            newHistory.push({ type: 'error', content: err instanceof Error ? err.message : 'Unknown error' });
+        }
+
+        if (line.trim().split(/\s+/)[0]?.toLowerCase() !== 'clear') {
+            setHistory(newHistory);
+        }
+        setInput('');
+    };
+
     const onKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
-            const newHistory: HistoryItem[] = [...history, { type: 'input', content: input }];
-            if (input.trim()) past.current.push(input);
-            cursor.current = -1;
-
-            try {
-                const output = handleCommand(input);
-                if (output) newHistory.push(output);
-            } catch (err: unknown) {
-                playError();
-                newHistory.push({ type: 'error', content: err instanceof Error ? err.message : 'Unknown error' });
-            }
-
-            if (input.trim().split(/\s+/)[0]?.toLowerCase() !== 'clear') {
-                setHistory(newHistory);
-            }
-            setInput('');
+            run(input);
         } else if (e.key === 'ArrowUp') {
             e.preventDefault();
             if (!past.current.length) return;
@@ -248,7 +257,10 @@ const Terminal = () => {
     };
 
     return (
-        <div className="h-full flex flex-col font-mono text-sm" onClick={() => inputRef.current?.focus()}>
+        <div
+            className="h-full flex flex-col font-mono text-sm"
+            onClick={() => { if (!window.getSelection()?.toString()) inputRef.current?.focus(); }}
+        >
             <div className="flex-1 overflow-y-auto space-y-0.5 p-1">
                 {history.map((item, i) => (
                     <div
@@ -269,6 +281,20 @@ const Terminal = () => {
                 <div ref={bottomRef} />
             </div>
 
+            {/* Tap-to-run shortcuts: typing on a phone keyboard is slow */}
+            <div className="md:hidden flex gap-1.5 overflow-x-auto pt-2 pb-1" onClick={(e) => e.stopPropagation()}>
+                {QUICK_CMDS.map((c) => (
+                    <button
+                        key={c}
+                        type="button"
+                        onClick={() => run(c)}
+                        className="shrink-0 h-9 px-3 border border-neon-green/40 rounded-[3px] text-neon-green text-xs active:bg-neon-green/20"
+                    >
+                        {c}
+                    </button>
+                ))}
+            </div>
+
             <div className="flex items-center pt-2 border-t border-neon-green/20">
                 <span className="text-neon-green mr-2 shrink-0">{PROMPT}</span>
                 <input
@@ -279,7 +305,6 @@ const Terminal = () => {
                     onKeyDown={onKeyDown}
                     className="flex-1 min-w-0 bg-transparent border-none outline-none text-white placeholder-gray-700 [caret-color:rgb(var(--c-primary))] [caret-shape:block]"
                     placeholder="type 'help'"
-                    autoFocus
                     spellCheck={false}
                     autoCapitalize="off"
                     autoComplete="off"

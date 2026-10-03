@@ -16,7 +16,7 @@ function App() {
 
   return (
     <LazyMotion features={domAnimation} strict>
-    <div className="relative min-h-screen w-full overflow-hidden bg-bg-void text-gray-100 flex items-center justify-center">
+    <div className="relative min-h-[100dvh] w-full overflow-hidden bg-bg-void text-gray-100 flex items-center justify-center">
 
       {/* Persistent Background FX */}
       <AsciiField />

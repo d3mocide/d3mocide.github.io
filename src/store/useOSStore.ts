@@ -84,6 +84,8 @@ interface OSState {
   closeWindow: (id: string) => void;
   minimizeWindow: (id: string) => void;
   focusWindow: (id: string) => void;
+  /** drop focus so the desktop / launcher shows (windows stay open) */
+  showDesktop: () => void;
 }
 
 export const useOSStore = create<OSState>()(persist((set) => ({
@@ -170,6 +172,8 @@ export const useOSStore = create<OSState>()(persist((set) => ({
     windows: state.windows.map(w => w.id === id ? { ...w, isMinimized: true } : w),
     activeWindowId: null // Clear focus
   })),
+
+  showDesktop: () => set({ activeWindowId: null }),
 
   focusWindow: (id) => set((state) => {
     const maxZ = Math.max(...state.windows.map(w => w.zIndex), 0);

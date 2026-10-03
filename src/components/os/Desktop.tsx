@@ -14,6 +14,7 @@ const Settings = lazy(() => import('@/components/apps/Settings'));
 const WebFlasher = lazy(() => import('@/components/apps/WebFlasher'));
 const MeshMap = lazy(() => import('@/components/apps/MeshMap'));
 const About = lazy(() => import('@/components/apps/About'));
+const Game = lazy(() => import('@/components/apps/Game'));
 
 // Content mapping
 const WindowContent = ({ id }: { id: string }) => {
@@ -27,6 +28,7 @@ const WindowContent = ({ id }: { id: string }) => {
   if (id === 'flasher') return <WebFlasher highlightId={data.projectId} />;
   if (id === 'mesh') return <MeshMap />;
   if (id === 'about') return <About />;
+  if (id === 'game') return <Game />;
   
   if (id.startsWith('browser_') || data.type === 'browser') {
       return <Browser initialUrl={data.url} />;
@@ -48,6 +50,7 @@ const Desktop = () => {
         if (id === 'flasher') return { defaultSize: { width: 800, height: 560 } };
         if (id === 'mesh') return { defaultSize: { width: 880, height: 540 }, minSize: { width: 420, height: 320 } };
         if (id === 'about') return { defaultSize: { width: 560, height: 520 } };
+        if (id === 'game') return { defaultSize: { width: 480, height: 560 }, minSize: { width: 320, height: 420 } };
         if (id.startsWith('browser_') || data?.type === 'browser') {
             return { defaultSize: { width: 1024, height: 720 }, minSize: { width: 600, height: 400 } };
         }
@@ -62,7 +65,7 @@ const Desktop = () => {
     }, [windows, openWindow]);
 
     return (
-        <div className="relative w-full h-screen overflow-hidden">
+        <div className="relative w-full h-[100dvh] overflow-hidden">
             
             {/* Desktop icons sit under the windows (DOM order) */}
             <DesktopIcons />

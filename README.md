@@ -14,7 +14,9 @@
 - 🕸️ **Living ASCII Mesh** - The background is a character-based mesh network: pinned repos are named nodes, packets hop between them, signal readouts tick (simulated), and clicking a node opens it on the Mesh Map
 - 🗺️ **Mesh Map** - Interactive map + accessible node list with repo details, links and flash buttons
 - 🪟 **Window Management** - Draggable, resizable windows with maximize, edge snapping (drag to a screen edge), and remembered positions
-- ⌨️ **Keyboard Shortcuts** - `Alt+T/P/F/M/A/S` open apps, `Alt+1…9` focus, `Alt+[ ]` cycle, `Alt+W` close, `Alt+Enter` maximize
+- 📱 **Phone-friendly** - Apps run full-screen one at a time from a launcher grid, with a home button, safe-area aware taskbar and tap-to-run terminal commands
+- 🕹️ **PACKET_LOSS** - A small ASCII game hidden in the OS
+- ⌨️ **Keyboard Shortcuts** - `Alt+T/P/F/M/A/G/S` open apps, `Alt+1…9` focus, `Alt+[ ]` cycle, `Alt+W` close, `Alt+Enter` maximize
 - 🖥️ **Desktop Icons** - ASCII launchers (double-click, or tap on touch devices)
 - 💻 **Terminal** - Command history, Tab completion, `neofetch`, `banner`, `open <repo>`, `theme`, `matrix` and more
 - 📁 **Project Explorer** - Portfolio showcase, live-synced with your pinned GitHub repos
@@ -114,7 +116,7 @@ d3_os/
 
 | Keys | Action |
 | --- | --- |
-| `Alt+T` `P` `F` `M` `A` `S` | Terminal, Projects, Flasher, Mesh Map, About, Config |
+| `Alt+T` `P` `F` `M` `A` `G` `S` | Terminal, Projects, Flasher, Mesh Map, About, Packet Loss, Config |
 | `Alt+1`…`9` | Focus the nth open window |
 | `Alt+[` / `Alt+]` | Previous / next window |
 | `Alt+W` / `Alt+N` | Close / minimize the focused window |
@@ -127,6 +129,7 @@ d3_os/
 - **PROJECT_EXPLORER** - Portfolio browser, live-synced with pinned GitHub repos
 - **WEB_FLASHER** - Flash firmware to SBCs/microcontrollers over USB
 - **ABOUT** - Org and project readout
+- **PACKET_LOSS** - Snake-style game: route a packet through the mesh, grab gateway nodes, dodge jammers (swipe, d-pad, arrows/WASD; `game` in the terminal)
 - **SYSTEM_CONFIG** - Theme, ASCII field, scanlines, motion, sound, keyboard reference
 - **BROWSER** - Integrated web browser (opened programmatically)
 
