@@ -131,7 +131,7 @@ d3_os/
 - **PROJECT_EXPLORER** - Portfolio browser, live-synced with pinned GitHub repos
 - **WEB_FLASHER** - Flash firmware to SBCs/microcontrollers over USB
 - **ABOUT** - Org and project readout
-- **JAM_INVADERS** - Space Invaders: defend the mesh from marching jammers, hide behind erodable firewalls, shoot the rogue AP for bonus points (`invaders` in the terminal; ←/→ + space, or on-screen pads)
+- **JAM_INVADERS** - Space Invaders with a radio twist: jammers sit on 433/868/915 MHz and you can only hit the band you're tuned to; chain same-channel kills for a lock multiplier, hide behind erodable firewalls, shoot the rogue AP (`invaders` in the terminal; ←/→ move, space fires, 1/2/3 tune, or on-screen pads)
 - **PACKET_LOSS** - Snake-style game: route a packet through the mesh, grab gateway nodes, dodge jammers (swipe, d-pad, arrows/WASD; `game` in the terminal). Levels with firewalls, timed `$` bonuses, `?` mystery packets (turbo, slow-mo, ghost, x2, reversed controls) and a green-screen Nokia `[LCD]` skin
 - **SYSTEM_CONFIG** - Theme, ASCII field, scanlines, motion, sound, keyboard reference
 - **BROWSER** - Integrated web browser (opened programmatically)
