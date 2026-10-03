@@ -1,8 +1,9 @@
-import { useEffect, lazy, Suspense } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { useOSStore } from '@/store/useOSStore';
 import WindowFrame from './WindowFrame';
 import Taskbar from './Taskbar';
 import DesktopIcons from './DesktopIcons';
+import ContextMenu from './ContextMenu';
 import { useShortcuts } from '@/hooks/useShortcuts';
 import { TASKBAR_H } from './WindowFrame';
 
@@ -14,6 +15,8 @@ const Settings = lazy(() => import('@/components/apps/Settings'));
 const WebFlasher = lazy(() => import('@/components/apps/WebFlasher'));
 const MeshMap = lazy(() => import('@/components/apps/MeshMap'));
 const About = lazy(() => import('@/components/apps/About'));
+const Game = lazy(() => import('@/components/apps/Game'));
+const Invaders = lazy(() => import('@/components/apps/Invaders'));
 
 // Content mapping
 const WindowContent = ({ id }: { id: string }) => {
@@ -27,6 +30,8 @@ const WindowContent = ({ id }: { id: string }) => {
   if (id === 'flasher') return <WebFlasher highlightId={data.projectId} />;
   if (id === 'mesh') return <MeshMap />;
   if (id === 'about') return <About />;
+  if (id === 'game') return <Game />;
+  if (id === 'invaders') return <Invaders />;
   
   if (id.startsWith('browser_') || data.type === 'browser') {
       return <Browser initialUrl={data.url} />;
@@ -40,6 +45,7 @@ const WindowContent = ({ id }: { id: string }) => {
 const Desktop = () => {
     const { windows, openWindow, snapHint } = useOSStore();
     useShortcuts(true);
+    const [menuAt, setMenuAt] = useState<{ x: number; y: number } | null>(null);
     
     const getWindowConfig = (id: string, data: any) => {
         if (id === 'terminal') return { defaultSize: { width: 650, height: 400 } };
@@ -48,6 +54,8 @@ const Desktop = () => {
         if (id === 'flasher') return { defaultSize: { width: 800, height: 560 } };
         if (id === 'mesh') return { defaultSize: { width: 880, height: 540 }, minSize: { width: 420, height: 320 } };
         if (id === 'about') return { defaultSize: { width: 560, height: 520 } };
+        if (id === 'invaders') return { defaultSize: { width: 460, height: 600 }, minSize: { width: 320, height: 420 } };
+        if (id === 'game') return { defaultSize: { width: 480, height: 560 }, minSize: { width: 320, height: 420 } };
         if (id.startsWith('browser_') || data?.type === 'browser') {
             return { defaultSize: { width: 1024, height: 720 }, minSize: { width: 600, height: 400 } };
         }
@@ -62,7 +70,15 @@ const Desktop = () => {
     }, [windows, openWindow]);
 
     return (
-        <div className="relative w-full h-screen overflow-hidden">
+        <div
+            className="relative w-full h-[100dvh] overflow-hidden"
+            onContextMenu={(e) => {
+                // only the bare desktop gets the menu; windows, icons and text fields keep the browser's
+                if ((e.target as HTMLElement).closest('[data-os-ui], input, textarea')) return;
+                e.preventDefault();
+                setMenuAt({ x: e.clientX, y: e.clientY });
+            }}
+        >
             
             {/* Desktop icons sit under the windows (DOM order) */}
             <DesktopIcons />
@@ -106,6 +122,7 @@ const Desktop = () => {
 
             {/* Taskbar Layer */}
             <Taskbar />
+            <ContextMenu at={menuAt} onClose={() => setMenuAt(null)} />
         </div>
     );
 };

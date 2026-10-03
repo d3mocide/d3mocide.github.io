@@ -87,5 +87,5 @@ export const useSoundFX = () => {
         playTone(1200, 0.02, 'square');
     }, [playTone, soundEnabled.keypress]);
 
-    return { playClick, playHover, playError, playKeystroke };
+    return { playClick, playHover, playError, playKeystroke, playTone };
 };

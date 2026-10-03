@@ -9,9 +9,28 @@
 :root[data-theme='ice'] { --c-primary: 110 215 255; }
 :root[data-theme='white'] { --c-primary: 229 229 229; }
 
+:root { --taskbar-h: 44px; }
+@media (max-width: 767px) {
+  :root { --taskbar-h: calc(52px + env(safe-area-inset-bottom, 0px)); }
+}
+
 @layer base {
+  html, body {
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     @apply antialiased text-gray-100 bg-bg-void font-mono;
+  }
+
+  /* Taps should be taps: no double-tap zoom delay on controls (pinch zoom stays available). */
+  button, a, [role='button'] { touch-action: manipulation; }
+
+  /* iOS zooms the page when a focused field has a font under 16px. */
+  @media (pointer: coarse) {
+    input, textarea, select { font-size: 16px !important; }
   }
 
   /* Custom Scrollbar - Cyberpunk Theme */

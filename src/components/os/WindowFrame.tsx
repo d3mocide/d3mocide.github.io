@@ -54,7 +54,7 @@ const WindowFrame = ({
   const w = Math.min(saved?.w ?? num(defaultSize.width, 600), vp.w);
   const h = Math.min(saved?.h ?? num(defaultSize.height, 400), areaH);
   const x = Math.max(0, Math.min(saved?.x ?? initialPos.x, vp.w - Math.min(w, vp.w)));
-  const y = Math.max(0, Math.min(saved?.y ?? initialPos.y, areaH - 40));
+  const y = Math.max(0, Math.min(saved?.y ?? initialPos.y, areaH - h));
   const maximized = !!saved?.maximized && !isMobile;
 
   const toggleMaximize = () => setWindowGeometry(id, { x, y, w, h, maximized: !maximized });
@@ -67,19 +67,19 @@ const WindowFrame = ({
       {/* Title bar */}
       <div
         onDoubleClick={isMobile ? undefined : toggleMaximize}
-        className={`window-handle flex justify-between items-center px-3 py-1.5 border-b select-none font-mono text-xs uppercase tracking-[0.2em] ${isActive ? 'bg-neon-green/10 border-neon-green/40 text-neon-green' : 'bg-white/[0.02] border-white/10 text-gray-500'} ${isMobile || maximized ? '' : 'cursor-grab active:cursor-grabbing'}`}
+        className={`window-handle flex justify-between items-center px-3 py-1.5 max-md:py-1 border-b select-none font-mono text-xs uppercase tracking-[0.2em] ${isActive ? 'bg-neon-green/10 border-neon-green/40 text-neon-green' : 'bg-white/[0.02] border-white/10 text-gray-500'} ${isMobile || maximized ? '' : 'cursor-grab active:cursor-grabbing'}`}
       >
           <span className="truncate">
             <span aria-hidden className={isActive ? 'text-neon-green' : 'text-gray-600'}>▌</span> {title}
           </span>
           <span className="flex items-center space-x-1 shrink-0">
             <button
-                aria-label="Minimize"
+                aria-label={isMobile ? 'Home' : 'Minimize'}
                 onClick={() => { playClick(); minimizeWindow(id); }}
                 onMouseEnter={playHover}
-                className="px-1.5 hover:bg-neon-green/20 hover:text-white transition-colors"
+                className="px-1.5 max-md:px-3 max-md:py-1.5 hover:bg-neon-green/20 hover:text-white transition-colors"
             >
-                [_]
+                {isMobile ? '[⌂]' : '[_]'}
             </button>
             {!isMobile && (
               <button
@@ -95,7 +95,7 @@ const WindowFrame = ({
                 aria-label="Close"
                 onClick={() => { playClick(); closeWindow(id); }}
                 onMouseEnter={playHover}
-                className="px-1.5 text-neon-red hover:bg-neon-red/20 hover:text-white transition-colors"
+                className="px-1.5 max-md:px-3 max-md:py-1.5 text-neon-red hover:bg-neon-red/20 hover:text-white transition-colors"
             >
                 [×]
             </button>
@@ -103,7 +103,7 @@ const WindowFrame = ({
       </div>
 
       {/* Content */}
-      <div className="p-4 flex-1 h-full overflow-auto text-gray-300 font-mono text-sm scrollbar-thin scrollbar-thumb-neon-green/50 scrollbar-track-transparent">
+      <div className="p-4 max-md:p-3 flex-1 h-full min-h-0 overflow-auto text-gray-300 font-mono text-sm scrollbar-thin scrollbar-thumb-neon-green/50 scrollbar-track-transparent">
           {children}
       </div>
     </CyberFrame>
@@ -111,7 +111,11 @@ const WindowFrame = ({
 
   if (isMobile) {
     return (
-      <div data-os-ui className="fixed inset-0 pb-20 p-2" style={{ zIndex: windowState.zIndex, pointerEvents: 'auto' }}>
+      <div
+        data-os-ui
+        className="fixed inset-x-0 top-0 p-2"
+        style={{ zIndex: windowState.zIndex, pointerEvents: 'auto', bottom: 'var(--taskbar-h)', paddingTop: 'max(0.5rem, env(safe-area-inset-top))' }}
+      >
         <AnimatePresence>
           <m.div
             className="h-full w-full flex flex-col"

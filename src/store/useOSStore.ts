@@ -84,7 +84,14 @@ interface OSState {
   closeWindow: (id: string) => void;
   minimizeWindow: (id: string) => void;
   focusWindow: (id: string) => void;
+  /** drop focus so the desktop / launcher shows (windows stay open) */
+  showDesktop: () => void;
+  /** minimize every window, or bring back the ones the last call hid */
+  toggleDesktop: () => void;
 }
+
+// windows hidden by the last toggleDesktop, so a second call can restore exactly those
+let peeked: string[] = [];
 
 export const useOSStore = create<OSState>()(persist((set) => ({
   theme: 'green',
@@ -170,6 +177,20 @@ export const useOSStore = create<OSState>()(persist((set) => ({
     windows: state.windows.map(w => w.id === id ? { ...w, isMinimized: true } : w),
     activeWindowId: null // Clear focus
   })),
+
+  showDesktop: () => set({ activeWindowId: null }),
+
+  toggleDesktop: () => set((state) => {
+    const visible = state.windows.filter((w) => w.isOpen && !w.isMinimized);
+    if (visible.length) {
+      peeked = visible.map((w) => w.id);
+      return { windows: state.windows.map((w) => (peeked.includes(w.id) ? { ...w, isMinimized: true } : w)), activeWindowId: null };
+    }
+    const back = state.windows.filter((w) => w.isOpen && peeked.includes(w.id));
+    if (!back.length) return {};
+    const top = back.reduce((a, b) => (b.zIndex > a.zIndex ? b : a));
+    return { windows: state.windows.map((w) => (back.includes(w) ? { ...w, isMinimized: false } : w)), activeWindowId: top.id };
+  }),
 
   focusWindow: (id) => set((state) => {
     const maxZ = Math.max(...state.windows.map(w => w.zIndex), 0);

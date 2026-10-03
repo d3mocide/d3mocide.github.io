@@ -14,7 +14,9 @@
 - 🕸️ **Living ASCII Mesh** - The background is a character-based mesh network: pinned repos are named nodes, packets hop between them, signal readouts tick (simulated), and clicking a node opens it on the Mesh Map
 - 🗺️ **Mesh Map** - Interactive map + accessible node list with repo details, links and flash buttons
 - 🪟 **Window Management** - Draggable, resizable windows with maximize, edge snapping (drag to a screen edge), and remembered positions
-- ⌨️ **Keyboard Shortcuts** - `Alt+T/P/F/M/A/S` open apps, `Alt+1…9` focus, `Alt+[ ]` cycle, `Alt+W` close, `Alt+Enter` maximize
+- 📱 **Phone-friendly** - Apps run full-screen one at a time from a launcher grid, with a home button, safe-area aware taskbar and tap-to-run terminal commands
+- 🕹️ **PACKET_LOSS** - A small ASCII game hidden in the OS
+- ⌨️ **Keyboard Shortcuts** - `Alt+T/P/F/M/A/G/I/S` open apps, `Alt+1…9` focus, `Alt+[ ]` cycle, `Alt+W` close, `Alt+Enter` maximize, `Alt+←/→` snap, `Alt+D` show desktop, right-click the desktop for a menu
 - 🖥️ **Desktop Icons** - ASCII launchers (double-click, or tap on touch devices)
 - 💻 **Terminal** - Command history, Tab completion, `neofetch`, `banner`, `open <repo>`, `theme`, `matrix` and more
 - 📁 **Project Explorer** - Portfolio showcase, live-synced with your pinned GitHub repos
@@ -114,11 +116,13 @@ d3_os/
 
 | Keys | Action |
 | --- | --- |
-| `Alt+T` `P` `F` `M` `A` `S` | Terminal, Projects, Flasher, Mesh Map, About, Config |
+| `Alt+T` `P` `F` `M` `A` `G` `I` `S` | Terminal, Projects, Flasher, Mesh Map, About, Packet Loss, Jam Invaders, Config |
 | `Alt+1`…`9` | Focus the nth open window |
 | `Alt+[` / `Alt+]` | Previous / next window |
 | `Alt+W` / `Alt+N` | Close / minimize the focused window |
 | `Alt+Enter` | Maximize / restore |
+| `Alt+←` / `Alt+→` | Snap to the left / right half |
+| `Alt+D` | Show desktop / restore windows |
 
 ### Applications
 
@@ -127,6 +131,8 @@ d3_os/
 - **PROJECT_EXPLORER** - Portfolio browser, live-synced with pinned GitHub repos
 - **WEB_FLASHER** - Flash firmware to SBCs/microcontrollers over USB
 - **ABOUT** - Org and project readout
+- **JAM_INVADERS** - Space Invaders with a radio twist: jammers sit on 433/868/915 MHz and you can only hit the band you're tuned to; chain same-channel kills for a lock multiplier, hide behind erodable firewalls, shoot the rogue AP (`invaders` in the terminal; ←/→ move, space fires, 1/2/3 tune, or on-screen pads)
+- **PACKET_LOSS** - Snake-style game: route a packet through the mesh, grab gateway nodes, dodge jammers (swipe, d-pad, arrows/WASD; `game` in the terminal). Levels with firewalls, timed `$` bonuses, `?` mystery packets (turbo, slow-mo, ghost, x2, reversed controls) and a green-screen Nokia `[LCD]` skin
 - **SYSTEM_CONFIG** - Theme, ASCII field, scanlines, motion, sound, keyboard reference
 - **BROWSER** - Integrated web browser (opened programmatically)
 
