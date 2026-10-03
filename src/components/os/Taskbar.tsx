@@ -13,6 +13,7 @@ const QUICK = [
   { id: 'terminal', title: 'D3_TERM v2.0', label: 'TERM', tone: 'text-neon-blue border-neon-blue/30 hover:bg-neon-blue/10' },
   { id: 'projects', title: 'PROJECT_EXPLORER', label: 'PROJ', tone: 'text-neon-pink border-neon-pink/30 hover:bg-neon-pink/10' },
   { id: 'flasher', title: 'WEB_FLASHER', label: 'FLASH', tone: 'text-neon-green border-neon-green/30 hover:bg-neon-green/10' },
+  { id: 'mesh', title: 'MESH_MAP', label: 'MESH', tone: 'text-neon-yellow border-neon-yellow/30 hover:bg-neon-yellow/10' },
 ];
 
 // Status-line style taskbar: square, hairline, monospace chips.
@@ -30,7 +31,7 @@ const Taskbar = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-11 bg-bg-panel/95 border-t border-neon-green/30 z-50 flex items-center px-2 gap-2 select-none font-mono text-xs">
+    <div data-os-ui className="fixed bottom-0 left-0 right-0 h-11 bg-bg-panel/95 border-t border-neon-green/30 z-50 flex items-center px-2 gap-2 select-none font-mono text-xs">
       <StartMenu isOpen={isStartOpen} onClose={() => setIsStartOpen(false)} />
 
       {/* Start */}

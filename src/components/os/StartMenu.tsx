@@ -18,11 +18,14 @@ const StartMenu = ({ isOpen, onClose }: StartMenuProps) => {
       }
     };
 
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEsc);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEsc);
     };
   }, [isOpen, onClose]);
 
@@ -40,7 +43,7 @@ const StartMenu = ({ isOpen, onClose }: StartMenuProps) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 8 }}
           transition={{ duration: 0.12, ease: "easeOut" }}
-          className="fixed bottom-12 left-2 w-72 bg-bg-panel border border-neon-green/40 rounded-[3px] shadow-[0_12px_40px_rgba(0,0,0,0.7)] z-50 overflow-hidden font-mono"
+          data-os-ui className="fixed bottom-12 left-2 w-72 bg-bg-panel border border-neon-green/40 rounded-[3px] shadow-[0_12px_40px_rgba(0,0,0,0.7)] z-50 overflow-hidden font-mono"
         >
             {/* Header */}
             <div className="px-4 py-3 border-b border-neon-green/30 bg-neon-green/5">
@@ -72,6 +75,22 @@ const StartMenu = ({ isOpen, onClose }: StartMenuProps) => {
                 >
                     <span aria-hidden className="w-6 text-neon-green group-hover:text-white transition-colors">[~]</span>
                     <span className="text-sm">Web Flasher</span>
+                </button>
+
+                <button
+                  onClick={() => handleItemClick(() => openWindow('mesh', 'MESH_MAP'))}
+                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors group"
+                >
+                    <span aria-hidden className="w-6 text-neon-yellow group-hover:text-white transition-colors">(@)</span>
+                    <span className="text-sm">Mesh Map</span>
+                </button>
+
+                <button
+                  onClick={() => handleItemClick(() => openWindow('about', 'ABOUT'))}
+                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors group"
+                >
+                    <span aria-hidden className="w-6 text-neon-blue group-hover:text-white transition-colors">[?]</span>
+                    <span className="text-sm">About</span>
                 </button>
 
                  <button

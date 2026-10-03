@@ -23,7 +23,7 @@ const CyberFrame = ({ children, className = '', variant = 'primary', active = fa
     <div className={`relative ${className}`}>
       <div
         className={`relative z-10 bg-bg-panel border ${active ? tone.on : tone.idle} rounded-[3px] overflow-hidden flex flex-col h-full transition-colors duration-150 ${interactive ? tone.hover : ''} ${
-          active ? 'shadow-[0_0_0_1px_rgba(0,255,65,0.08),0_12px_40px_rgba(0,0,0,0.6)]' : 'shadow-[0_8px_30px_rgba(0,0,0,0.5)]'
+          active ? 'shadow-[0_0_0_1px_rgb(var(--c-primary)/0.08),0_12px_40px_rgba(0,0,0,0.6)]' : 'shadow-[0_8px_30px_rgba(0,0,0,0.5)]'
         }`}
       >
         {children}

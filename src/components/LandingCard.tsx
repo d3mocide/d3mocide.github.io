@@ -62,7 +62,7 @@ const LandingCard = () => {
   }, [phase, visibleRows, playClick, triggerGlitch, setBooting]);
 
   return (
-    <div className={`relative z-20 w-full max-w-3xl mx-auto flex flex-col items-center transition-all duration-1000 ${phase === 'warping' ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+    <div data-os-ui className={`relative z-20 w-full max-w-3xl mx-auto flex flex-col items-center transition-all duration-1000 ${phase === 'warping' ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
 
       {/* Title-screen panel */}
       <div className="bg-black/70 border border-neon-green/25 rounded-[3px] p-8 md:p-12 w-full flex flex-col items-center relative">

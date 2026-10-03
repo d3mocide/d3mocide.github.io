@@ -44,7 +44,7 @@ const Browser = ({ initialUrl = 'https://google.com' }: BrowserProps) => {
                 onChange={(e) => setInputUrl(e.target.value)}
                 aria-label="Address"
                 spellCheck={false}
-                className="w-full py-1 bg-transparent text-white text-xs focus:outline-none font-mono [caret-color:#00ff41]"
+                className="w-full py-1 bg-transparent text-white text-xs focus:outline-none font-mono [caret-color:rgb(var(--c-primary))]"
             />
         </form>
       </div>

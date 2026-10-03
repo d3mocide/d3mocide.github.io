@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { toneText, type Tone } from './tone';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 // Small text-mode building blocks shared by the apps: everything is drawn with real
 // characters (box-drawing rules, [brackets], dotted leaders) rather than icons or fills.
@@ -18,11 +19,12 @@ const SPIN = '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏';
 /** Braille spinner. */
 export const Spinner = ({ className }: { className?: string }) => {
   const [i, setI] = useState(0);
+  const reduceMotion = useReducedMotion();
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (reduceMotion) return;
     const id = setInterval(() => setI((n) => (n + 1) % SPIN.length), 80);
     return () => clearInterval(id);
-  }, []);
+  }, [reduceMotion]);
   return (
     <span aria-hidden className={className}>
       {SPIN[i]}
@@ -95,7 +97,7 @@ export const Toggle = ({ checked, onChange, children }: { checked: boolean; onCh
     className="flex items-center gap-2 text-xs text-left hover:bg-neon-green/5 px-1 py-0.5 rounded-[3px] transition-colors"
   >
     <span className={checked ? 'text-neon-green' : 'text-gray-600'}>{checked ? '[x]' : '[ ]'}</span>
-    <span className={checked ? 'text-gray-300' : 'text-gray-600 line-through'}>{children}</span>
+    <span className={checked ? 'text-gray-300' : 'text-gray-500'}>{children}</span>
   </button>
 );
 

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import { useOSStore } from '@/store/useOSStore';
 import AsciiField from '@/components/fx/AsciiField';
@@ -7,7 +8,11 @@ import Scanlines from '@/components/fx/Scanlines';
 import Branding from '@/components/Branding';
 
 function App() {
-  const { isBooting, isShutDown } = useOSStore();
+  const { isBooting, isShutDown, theme, scanlines } = useOSStore();
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   return (
     <LazyMotion features={domAnimation} strict>
@@ -24,12 +29,12 @@ function App() {
             className={`transition-all duration-[2000ms] ease-in-out ${
                 isBooting 
                 ? 'opacity-100 scale-100' 
-                : 'opacity-50 scale-[1.1] blur-none'
+                : 'opacity-50 md:scale-[1.1] blur-none'
             }`} 
         />
       </div>
       
-      <Scanlines />
+      {scanlines && <Scanlines />}
 
       {isShutDown ? (
         <div className="absolute inset-0 bg-black z-[100] flex flex-col items-center justify-center text-neon-red font-mono">

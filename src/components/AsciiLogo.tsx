@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { LOGO_ART, NETWORKS_ART } from '@/lib/asciiArt';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { getPrimaryHex } from '@/lib/theme';
 
 // Block-letter wordmark rendered as real text. Characters start as noise and decode
 // left-to-right; afterwards a bright scan sweeps across and rows occasionally glitch
@@ -10,7 +12,6 @@ const MAX_FS = 17;
 const DECODE_S = 1.4;
 const FONT = '"JetBrains Mono", ui-monospace, Menlo, monospace';
 const NOISE = '01<>[]{}/\\|$%#&*+=?!░▒▓';
-const GREEN = '#00ff41';
 const WHITE = '#e5e5e5';
 const PINK = '#ff0055';
 const BLUE = '#00B8FF';
@@ -27,13 +28,14 @@ interface AsciiLogoProps {
 
 const AsciiLogo = ({ showNetworks = true }: AsciiLogoProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const GREEN = getPrimaryHex();
     const logoCols = LOGO_ART[0].length;
     const start = performance.now();
     const netCols = NETWORKS_ART[0].length;
@@ -167,7 +169,7 @@ const AsciiLogo = ({ showNetworks = true }: AsciiLogoProps) => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
     };
-  }, [showNetworks]);
+  }, [showNetworks, reduceMotion]);
 
   return (
     <>

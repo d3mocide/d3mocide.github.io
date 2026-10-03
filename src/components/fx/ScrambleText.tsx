@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const NOISE = '01<>[]{}/\\|$%#&*+=?!';
 
@@ -12,9 +13,13 @@ interface ScrambleTextProps {
 // Text that starts as noise and locks in left to right.
 const ScrambleText = ({ text, duration = 450, className }: ScrambleTextProps) => {
   const [out, setOut] = useState(text);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (reduceMotion) {
+      setOut(text);
+      return;
+    }
     const start = performance.now();
     const id = setInterval(() => {
       const p = Math.min(1, (performance.now() - start) / duration);
@@ -27,7 +32,7 @@ const ScrambleText = ({ text, duration = 450, className }: ScrambleTextProps) =>
       if (p >= 1) clearInterval(id);
     }, 40);
     return () => clearInterval(id);
-  }, [text, duration]);
+  }, [text, duration, reduceMotion]);
 
   return <span className={className}>{out}</span>;
 };

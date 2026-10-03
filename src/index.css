@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme: the primary (phosphor) colour is a CSS variable so every `neon-green` utility,
+   the canvas effects and the scrollbars all follow the selected theme. Accents stay fixed. */
+:root { --c-primary: 0 255 65; }
+:root[data-theme='amber'] { --c-primary: 255 176 0; }
+:root[data-theme='ice'] { --c-primary: 110 215 255; }
+:root[data-theme='white'] { --c-primary: 229 229 229; }
+
 @layer base {
   body {
     @apply antialiased text-gray-100 bg-bg-void font-mono;
@@ -10,7 +17,7 @@
   /* Custom Scrollbar - Cyberpunk Theme */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 255, 65, 0.5) rgba(0, 0, 0, 0.3);
+    scrollbar-color: rgb(var(--c-primary) / 0.5) rgba(0, 0, 0, 0.3);
   }
 
   *::-webkit-scrollbar {
@@ -24,14 +31,14 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    background: rgba(0, 255, 65, 0.5);
+    background: rgb(var(--c-primary) / 0.5);
     border-radius: 0;
     border: 2px solid rgba(0, 0, 0, 0.3);
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 255, 65, 0.7);
-    box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+    background: rgb(var(--c-primary) / 0.7);
+    box-shadow: 0 0 10px rgb(var(--c-primary) / 0.5);
   }
 }
 @layer utilities {
@@ -121,9 +128,9 @@
 @layer utilities {
   .text-glow-green {
     text-shadow: 
-      0 0 5px rgba(0, 255, 65, 0.4),
-      0 0 10px rgba(0, 255, 65, 0.2),
-      0 0 15px rgba(0, 255, 65, 0.1);
+      0 0 5px rgb(var(--c-primary) / 0.4),
+      0 0 10px rgb(var(--c-primary) / 0.2),
+      0 0 15px rgb(var(--c-primary) / 0.1);
   }
 
   .text-glow-blue {

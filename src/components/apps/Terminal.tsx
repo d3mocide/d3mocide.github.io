@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useOSStore } from '@/store/useOSStore';
+import { useOSStore, THEMES, type ThemeId } from '@/store/useOSStore';
+import { usePinnedRepos } from '@/hooks/usePinnedRepos';
+import { APPS } from '@/lib/apps';
 import { useSoundFX } from '@/hooks/useSoundFX';
 import { LOGO_ART } from '@/lib/asciiArt';
 
@@ -11,25 +13,42 @@ interface HistoryItem {
 }
 
 const PROMPT = 'guest@d3frag:~$';
-const COMMANDS = ['about', 'banner', 'clear', 'date', 'echo', 'exit', 'flasher', 'help', 'ls', 'neofetch', 'projects', 'settings', 'sudo', 'whoami'];
+const COMMANDS = ['about', 'banner', 'cat', 'clear', 'date', 'echo', 'exit', 'flasher', 'help', 'keys', 'ls', 'matrix', 'mesh', 'neofetch', 'open', 'ping', 'projects', 'reboot', 'settings', 'sudo', 'theme', 'whoami', 'whois'];
 
 const HELP = [
   'AVAILABLE COMMANDS',
-  '  about      who we are',
-  '  banner     print the logo',
-  '  neofetch   system summary',
-  '  ls         list the filesystem',
-  '  projects   launch Project Explorer',
-  '  flasher    launch Web Flasher',
-  '  settings   open System Config',
-  '  whoami     current user',
-  '  date       current date/time',
-  '  echo ...   repeat text',
-  '  clear      clear the screen',
-  '  exit       close this terminal',
+  '  about        who we are',
+  '  whois d3frag organisation card',
+  '  banner       print the logo',
+  '  neofetch     system summary',
+  '  ls           list the filesystem',
+  '  cat <file>   read README.txt / about.txt',
+  '  open <repo>  show a project on the Mesh Map',
+  '  mesh         open the Mesh Map',
+  '  projects     launch Project Explorer',
+  '  flasher      launch Web Flasher',
+  '  settings     open System Config',
+  '  theme [name] list or switch theme',
+  '  matrix       take the red pill',
+  '  ping <host>  simulated ping',
+  '  keys         keyboard shortcuts',
+  '  reboot       replay the boot sequence',
+  '  whoami, date, echo ..., clear, exit',
   '',
   'TIP: Tab completes, ↑/↓ browse history.',
 ].join('\n');
+
+const FILES: Record<string, string> = {
+  'about.txt': 'd3FRAG Networks is a Portland based organization specializing in Radio Frequency Analysis and Mesh Network tool development.',
+  'readme.txt': [
+    'd3_OS — a web operating system for d3FRAG Networks.',
+    '',
+    '  * The background is a living ASCII mesh: pinned GitHub repos are the named nodes.',
+    '    Click a node (or run "open <repo>") to inspect it on the Mesh Map.',
+    '  * Drag windows to a screen edge to snap them; Alt+Enter maximizes.',
+    '  * Signal strength and packet traffic are simulated; repos, stars and links are real.',
+  ].join('\n'),
+};
 
 const Terminal = () => {
     const [input, setInput] = useState('');
@@ -42,7 +61,8 @@ const Terminal = () => {
     const cursor = useRef(-1);
     const bottomRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const { openWindow, closeWindow } = useOSStore();
+    const { openWindow, closeWindow, setTheme, setBooting, triggerMatrix, selectNode } = useOSStore();
+    const { repos, username } = usePinnedRepos();
     const { playKeystroke, playError } = useSoundFX();
 
     useEffect(() => {
@@ -79,7 +99,75 @@ const Terminal = () => {
             case 'echo':
                 return { type: 'output', content: rest.join(' ') };
             case 'ls':
-                return { type: 'output', content: 'projects/   flasher/   settings/   README.txt' };
+                return { type: 'output', content: 'projects/   flasher/   mesh/   about.txt   README.txt' };
+            case 'cat': {
+                const f = FILES[(rest[0] || '').toLowerCase()];
+                if (!rest[0]) throw new Error('cat: missing file operand');
+                if (!f) throw new Error(`cat: ${rest[0]}: No such file`);
+                return { type: 'output', content: f };
+            }
+            case 'whois':
+                return {
+                    type: 'output',
+                    content: [
+                        'd3FRAG Networks',
+                        '───────────────',
+                        'Location  Portland',
+                        'Focus     Radio Frequency Analysis, Mesh Network tooling',
+                        `GitHub    github.com/${username}`,
+                        'Web       d3frag.net',
+                        `Projects  ${repos.filter((r) => !r.isArchived).length} pinned`,
+                    ].join('\n'),
+                };
+            case 'open': {
+                const visible = repos.filter((r) => !r.isArchived);
+                const q = rest.join(' ').toLowerCase();
+                if (!q) return { type: 'output', content: 'USAGE: open <repo>\n' + visible.map((r) => `  ${r.name}`).join('\n') };
+                const hit = visible.find((r) => r.name.toLowerCase() === q) ?? visible.find((r) => r.name.toLowerCase().includes(q));
+                if (!hit) throw new Error(`open: no project matching "${rest.join(' ')}"`);
+                selectNode(hit.id);
+                openWindow('mesh', 'MESH_MAP');
+                return { type: 'output', content: `Opening ${hit.name} on the Mesh Map...` };
+            }
+            case 'mesh':
+                openWindow('mesh', 'MESH_MAP');
+                return { type: 'output', content: 'Opening Mesh Map...' };
+            case 'matrix':
+                triggerMatrix();
+                return { type: 'output', content: 'Wake up, guest...\n(the background will recover in ~12 seconds)' };
+            case 'theme': {
+                const want = (rest[0] || '').toLowerCase();
+                if (!want) return { type: 'output', content: `THEMES: ${THEMES.join('  ')}\nUSAGE: theme <name>` };
+                if (!THEMES.includes(want as ThemeId)) throw new Error(`theme: unknown theme "${want}" (try: ${THEMES.join(', ')})`);
+                setTheme(want as ThemeId);
+                return { type: 'output', content: `Theme set to ${want}.` };
+            }
+            case 'ping': {
+                const host = rest[0] || 'd3frag.net';
+                const lines = [`PING ${host} (simulated — no packets leave your browser)`];
+                let total = 0;
+                for (let n = 0; n < 4; n++) {
+                    const ms = 8 + Math.round(Math.random() * 24);
+                    total += ms;
+                    lines.push(`64 bytes from ${host}: icmp_seq=${n + 1} ttl=57 time=${ms} ms`);
+                }
+                lines.push(`avg ${(total / 4).toFixed(1)} ms`);
+                return { type: 'output', content: lines.join('\n') };
+            }
+            case 'keys':
+                return {
+                    type: 'output',
+                    content: [
+                        ...APPS.map((a) => `  Alt+${a.key}      ${a.label}`),
+                        '  Alt+1..9    focus nth window',
+                        '  Alt+[ / ]   previous / next window',
+                        '  Alt+W       close   Alt+N  minimize',
+                        '  Alt+Enter   maximize / restore',
+                    ].join('\n'),
+                };
+            case 'reboot':
+                setBooting(true);
+                return null;
             case 'banner':
                 return { type: 'art', content: LOGO_ART.join('\n') };
             case 'neofetch': {
@@ -189,7 +277,7 @@ const Terminal = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={onKeyDown}
-                    className="flex-1 min-w-0 bg-transparent border-none outline-none text-white placeholder-gray-700 [caret-color:#00ff41] [caret-shape:block]"
+                    className="flex-1 min-w-0 bg-transparent border-none outline-none text-white placeholder-gray-700 [caret-color:rgb(var(--c-primary))] [caret-shape:block]"
                     placeholder="type 'help'"
                     autoFocus
                     spellCheck={false}
