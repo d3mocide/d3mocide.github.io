@@ -8,8 +8,6 @@ export const LOGO_ART: string[] = [
   "╚██████║ ██████╔╝██║     ██║  ██║██║  ██║╚██████╔╝",
   " ╚═════╝ ╚═════╝ ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ "
 ];
-/** columns covered by the first two glyphs ("d3"); they get the accent color */
-export const LOGO_ACCENT_COLS = 17;
 export const NETWORKS_ART: string[] = [
   "███╗   ██╗███████╗████████╗██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗███████╗",
   "████╗  ██║██╔════╝╚══██╔══╝██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝██╔════╝",

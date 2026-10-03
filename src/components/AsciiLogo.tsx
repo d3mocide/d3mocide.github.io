@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { LOGO_ART, LOGO_ACCENT_COLS, NETWORKS_ART } from '@/lib/asciiArt';
+import { LOGO_ART, NETWORKS_ART } from '@/lib/asciiArt';
 
 // Block-letter wordmark rendered as real text. Characters start as noise and decode
 // left-to-right; afterwards a bright scan sweeps across and rows occasionally glitch
@@ -133,7 +133,7 @@ const AsciiLogo = ({ showNetworks = true }: AsciiLogoProps) => {
       const top = Math.max(0, (CANVAS_H - total) / 2);
 
       ctx.font = `${m1.fs}px ${FONT}`;
-      drawArt(LOGO_ART, (w - logoCols * m1.cw) / 2, top, t, 0, 0, (col) => (col < LOGO_ACCENT_COLS ? GREEN : WHITE), true, m1);
+      drawArt(LOGO_ART, (w - logoCols * m1.cw) / 2, top, t, 0, 0, () => WHITE, true, m1);
 
       if (showNetworks) {
         const netY = top + LOGO_ART.length * m1.lh + gap;
