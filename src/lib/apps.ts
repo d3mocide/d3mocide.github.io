@@ -19,5 +19,6 @@ export const APPS: AppDef[] = [
   { id: 'mesh', title: 'MESH_MAP', label: 'Mesh Map', tone: 'yellow', key: 'M', code: 'KeyM', art: ['(@)──(o)', ' │ ╲ ╱  ', '(o)──(@)', '        '] },
   { id: 'about', title: 'ABOUT', label: 'About', tone: 'blue', key: 'A', code: 'KeyA', art: ['┌─────┐', '│  ?  │', '│ d3  │', '└─────┘'] },
   { id: 'game', title: 'PACKET_LOSS', label: 'Packets', tone: 'pink', key: 'G', code: 'KeyG', art: ['┌─────┐', '│ooo@ │', '│   X │', '└─────┘'] },
+  { id: 'invaders', title: 'JAM_INVADERS', label: 'Invaders', tone: 'red', key: 'I', code: 'KeyI', art: ['┌─────┐', '│ ^o^ │', '│  A  │', '└─────┘'] },
   { id: 'settings', title: 'SYSTEM_CONFIG', label: 'Config', tone: 'yellow', key: 'S', code: 'KeyS', art: ['┌─────┐', '│ [*] │', '│ ═╪═ │', '└─────┘'] },
 ];

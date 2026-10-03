@@ -13,9 +13,9 @@ interface HistoryItem {
 }
 
 const PROMPT = 'guest@d3frag:~$';
-const COMMANDS = ['about', 'banner', 'cat', 'clear', 'date', 'echo', 'exit', 'flasher', 'game', 'help', 'keys', 'ls', 'matrix', 'mesh', 'neofetch', 'open', 'ping', 'projects', 'reboot', 'settings', 'sudo', 'theme', 'whoami', 'whois'];
+const COMMANDS = ['about', 'banner', 'cat', 'clear', 'date', 'echo', 'exit', 'flasher', 'game', 'help', 'invaders', 'keys', 'ls', 'matrix', 'mesh', 'neofetch', 'open', 'ping', 'projects', 'reboot', 'settings', 'sudo', 'theme', 'whoami', 'whois'];
 
-const QUICK_CMDS = ['help', 'about', 'projects', 'mesh', 'game', 'theme', 'neofetch', 'clear'];
+const QUICK_CMDS = ['help', 'about', 'projects', 'mesh', 'game', 'invaders', 'theme', 'clear'];
 
 const HELP = [
   'AVAILABLE COMMANDS',
@@ -29,7 +29,8 @@ const HELP = [
   '  mesh         open the Mesh Map',
   '  projects     launch Project Explorer',
   '  flasher      launch Web Flasher',
-  '  game         play PACKET_LOSS',
+  '  game         play PACKET_LOSS (snake)',
+  '  invaders     play JAM_INVADERS',
   '  settings     open System Config',
   '  theme [name] list or switch theme',
   '  matrix       take the red pill',
@@ -201,6 +202,9 @@ const Terminal = () => {
             case 'play':
                 openWindow('game', 'PACKET_LOSS');
                 return { type: 'output', content: 'Routing packets... good luck.' };
+            case 'invaders':
+                openWindow('invaders', 'JAM_INVADERS');
+                return { type: 'output', content: 'Jammers inbound. Defend the mesh.' };
             case 'settings':
                 openWindow('settings', 'SYSTEM_CONFIG');
                 return { type: 'output', content: 'Opening System Config...' };

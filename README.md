@@ -16,7 +16,7 @@
 - 🪟 **Window Management** - Draggable, resizable windows with maximize, edge snapping (drag to a screen edge), and remembered positions
 - 📱 **Phone-friendly** - Apps run full-screen one at a time from a launcher grid, with a home button, safe-area aware taskbar and tap-to-run terminal commands
 - 🕹️ **PACKET_LOSS** - A small ASCII game hidden in the OS
-- ⌨️ **Keyboard Shortcuts** - `Alt+T/P/F/M/A/G/S` open apps, `Alt+1…9` focus, `Alt+[ ]` cycle, `Alt+W` close, `Alt+Enter` maximize, `Alt+←/→` snap, `Alt+D` show desktop, right-click the desktop for a menu
+- ⌨️ **Keyboard Shortcuts** - `Alt+T/P/F/M/A/G/I/S` open apps, `Alt+1…9` focus, `Alt+[ ]` cycle, `Alt+W` close, `Alt+Enter` maximize, `Alt+←/→` snap, `Alt+D` show desktop, right-click the desktop for a menu
 - 🖥️ **Desktop Icons** - ASCII launchers (double-click, or tap on touch devices)
 - 💻 **Terminal** - Command history, Tab completion, `neofetch`, `banner`, `open <repo>`, `theme`, `matrix` and more
 - 📁 **Project Explorer** - Portfolio showcase, live-synced with your pinned GitHub repos
@@ -116,7 +116,7 @@ d3_os/
 
 | Keys | Action |
 | --- | --- |
-| `Alt+T` `P` `F` `M` `A` `G` `S` | Terminal, Projects, Flasher, Mesh Map, About, Packet Loss, Config |
+| `Alt+T` `P` `F` `M` `A` `G` `I` `S` | Terminal, Projects, Flasher, Mesh Map, About, Packet Loss, Jam Invaders, Config |
 | `Alt+1`…`9` | Focus the nth open window |
 | `Alt+[` / `Alt+]` | Previous / next window |
 | `Alt+W` / `Alt+N` | Close / minimize the focused window |
@@ -131,6 +131,7 @@ d3_os/
 - **PROJECT_EXPLORER** - Portfolio browser, live-synced with pinned GitHub repos
 - **WEB_FLASHER** - Flash firmware to SBCs/microcontrollers over USB
 - **ABOUT** - Org and project readout
+- **JAM_INVADERS** - Space Invaders: defend the mesh from marching jammers, hide behind erodable firewalls, shoot the rogue AP for bonus points (`invaders` in the terminal; ←/→ + space, or on-screen pads)
 - **PACKET_LOSS** - Snake-style game: route a packet through the mesh, grab gateway nodes, dodge jammers (swipe, d-pad, arrows/WASD; `game` in the terminal). Levels with firewalls, timed `$` bonuses, `?` mystery packets (turbo, slow-mo, ghost, x2, reversed controls) and a green-screen Nokia `[LCD]` skin
 - **SYSTEM_CONFIG** - Theme, ASCII field, scanlines, motion, sound, keyboard reference
 - **BROWSER** - Integrated web browser (opened programmatically)

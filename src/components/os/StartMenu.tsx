@@ -104,6 +104,14 @@ const StartMenu = ({ isOpen, onClose }: StartMenuProps) => {
                     <span className="text-sm">Packet Loss <span className="text-gray-600 text-xs">(game)</span></span>
                 </button>
 
+                <button
+                  onClick={() => handleItemClick(() => openWindow('invaders', 'JAM_INVADERS'))}
+                  className="w-full flex items-center space-x-3 px-3 py-2 max-md:py-3 text-gray-300 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors group"
+                >
+                    <span aria-hidden className="w-6 text-neon-red group-hover:text-white transition-colors">^o^</span>
+                    <span className="text-sm">Jam Invaders <span className="text-gray-600 text-xs">(game)</span></span>
+                </button>
+
                  <button
                   onClick={() => handleItemClick(() => openWindow('settings', 'SYSTEM_CONFIG'))}
                   className="w-full flex items-center space-x-3 px-3 py-2 max-md:py-3 text-gray-300 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors group"

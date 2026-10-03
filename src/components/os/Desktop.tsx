@@ -16,6 +16,7 @@ const WebFlasher = lazy(() => import('@/components/apps/WebFlasher'));
 const MeshMap = lazy(() => import('@/components/apps/MeshMap'));
 const About = lazy(() => import('@/components/apps/About'));
 const Game = lazy(() => import('@/components/apps/Game'));
+const Invaders = lazy(() => import('@/components/apps/Invaders'));
 
 // Content mapping
 const WindowContent = ({ id }: { id: string }) => {
@@ -30,6 +31,7 @@ const WindowContent = ({ id }: { id: string }) => {
   if (id === 'mesh') return <MeshMap />;
   if (id === 'about') return <About />;
   if (id === 'game') return <Game />;
+  if (id === 'invaders') return <Invaders />;
   
   if (id.startsWith('browser_') || data.type === 'browser') {
       return <Browser initialUrl={data.url} />;
@@ -52,6 +54,7 @@ const Desktop = () => {
         if (id === 'flasher') return { defaultSize: { width: 800, height: 560 } };
         if (id === 'mesh') return { defaultSize: { width: 880, height: 540 }, minSize: { width: 420, height: 320 } };
         if (id === 'about') return { defaultSize: { width: 560, height: 520 } };
+        if (id === 'invaders') return { defaultSize: { width: 460, height: 600 }, minSize: { width: 320, height: 420 } };
         if (id === 'game') return { defaultSize: { width: 480, height: 560 }, minSize: { width: 320, height: 420 } };
         if (id.startsWith('browser_') || data?.type === 'browser') {
             return { defaultSize: { width: 1024, height: 720 }, minSize: { width: 600, height: 400 } };
