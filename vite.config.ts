@@ -33,7 +33,7 @@ export default defineConfig({
           'react-vendor': ['react', 'react-dom'],
           
           // UI libraries chunk
-          'ui-vendor': ['framer-motion', 'lucide-react', 're-resizable', 'react-draggable'],
+          'ui-vendor': ['framer-motion', 're-resizable', 'react-draggable'],
           
           // State management
           'state-vendor': ['zustand'],

@@ -1,14 +1,24 @@
 import { useState, useEffect } from 'react';
 import { useOSStore } from '@/store/useOSStore';
 import { useSoundFX } from '@/hooks/useSoundFX';
-import { Terminal, LayoutGrid, Monitor, Zap } from 'lucide-react';
 import { useIP } from '@/hooks/useIP';
 import StartMenu from './StartMenu';
 
 import { useSimulatedCPU } from '@/hooks/useSimulatedCPU';
 
+const BARS = '▁▂▃▄▅▆▇█';
+const cpuBar = (pct: number) => BARS[Math.min(BARS.length - 1, Math.floor((pct / 100) * BARS.length))];
+
+const QUICK = [
+  { id: 'terminal', title: 'D3_TERM v2.0', label: 'TERM', tone: 'text-neon-blue border-neon-blue/30 hover:bg-neon-blue/10' },
+  { id: 'projects', title: 'PROJECT_EXPLORER', label: 'PROJ', tone: 'text-neon-pink border-neon-pink/30 hover:bg-neon-pink/10' },
+  { id: 'flasher', title: 'WEB_FLASHER', label: 'FLASH', tone: 'text-neon-green border-neon-green/30 hover:bg-neon-green/10' },
+  { id: 'mesh', title: 'MESH_MAP', label: 'MESH', tone: 'text-neon-yellow border-neon-yellow/30 hover:bg-neon-yellow/10' },
+];
+
+// Status-line style taskbar: square, hairline, monospace chips.
 const Taskbar = () => {
-  const { windows, focusWindow, openWindow } = useOSStore();
+  const { windows, activeWindowId, focusWindow, openWindow } = useOSStore();
   const { playClick } = useSoundFX();
   const { ip } = useIP();
   const cpu = useSimulatedCPU();
@@ -21,77 +31,65 @@ const Taskbar = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 h-14 bg-black/60 border border-white/10 backdrop-blur-md rounded-2xl z-50 flex items-center px-4 justify-between select-none shadow-2xl">
+    <div data-os-ui className="fixed bottom-0 left-0 right-0 h-11 bg-bg-panel/95 border-t border-neon-green/30 z-50 flex items-center px-2 gap-2 select-none font-mono text-xs">
       <StartMenu isOpen={isStartOpen} onClose={() => setIsStartOpen(false)} />
-      
-      {/* Start / Menu */}
-      <div className="flex items-center space-x-4 relative">
-        <div className="w-24 h-9 relative flex items-center justify-center"> {/* Container isolation */}
-            <button 
-            className={`
-                absolute inset-0 flex items-center justify-center space-x-2 border rounded transition-colors duration-200 z-50 outline-none
-                ${isStartOpen 
-                ? 'bg-neon-green/20 text-neon-green border-neon-green/50 shadow-[0_0_15px_rgba(0,255,65,0.3)]' 
-                : 'bg-neon-green/10 hover:bg-neon-green/20 text-neon-green border-neon-green/30'}
-            `}
-            onClick={() => { playClick(); setIsStartOpen(!isStartOpen); }}
-            >
-            <Monitor size={16} />
-            <span className="font-mono font-bold text-sm tracking-widest">START</span>
-            </button>
-        </div>
 
-        {/* Quick Launch */}
-        <div className="h-6 w-px bg-neon-green/20 mx-2" />
-        <button 
-            className="p-2 text-neon-blue hover:text-white transition-colors"
-            title="Terminal"
-            onClick={() => { playClick(); openWindow('terminal', 'D3_TERM v2.0'); }}
-        >
-            <Terminal size={18} />
-        </button>
-        <button 
-            className="p-2 text-neon-pink hover:text-white transition-colors" 
-            title="Projects"
-            onClick={() => { playClick(); openWindow('projects', 'PROJECT_EXPLORER'); }}
-        >
-            <LayoutGrid size={18} />
-        </button>
-        <button
-            className="p-2 text-neon-green hover:text-white transition-colors"
-            title="Web Flasher"
-            onClick={() => { playClick(); openWindow('flasher', 'WEB_FLASHER'); }}
-        >
-            <Zap size={18} />
-        </button>
-      </div>
+      {/* Start */}
+      <button
+        className={`h-7 px-3 border rounded-[3px] font-bold tracking-widest transition-colors outline-none ${
+          isStartOpen
+            ? 'bg-neon-green text-black border-neon-green'
+            : 'text-neon-green border-neon-green/50 hover:bg-neon-green/10'
+        }`}
+        onClick={() => { playClick(); setIsStartOpen(!isStartOpen); }}
+      >
+        [ START ]
+      </button>
 
-      {/* Active Windows */}
-      <div className="flex-1 flex items-center ml-8 space-x-2 overflow-x-auto">
-        {windows.filter(w => w.isOpen).map((win) => (
+      {/* Quick launch */}
+      <div className="hidden sm:flex items-center gap-1">
+        {QUICK.map((q) => (
           <button
-            key={win.id}
-            onClick={() => { playClick(); focusWindow(win.id); }}
-            className={`
-              flex items-center space-x-2 px-3 py-1.5 border min-w-[120px] max-w-[200px] truncate rounded-sm transition-all
-              ${!win.isMinimized 
-                ? 'bg-neon-green/10 border-neon-green/40 text-neon-green shadow-[0_0_10px_rgba(0,255,65,0.1)]' 
-                : 'bg-transparent border-gray-700 text-gray-500 hover:border-gray-500 hover:text-gray-300'}
-            `}
+            key={q.id}
+            title={q.title}
+            onClick={() => { playClick(); openWindow(q.id, q.title); }}
+            className={`h-7 px-2 border rounded-[3px] tracking-wider transition-colors ${q.tone}`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-current" />
-            <span className="font-mono text-xs truncate">{win.title}</span>
+            {q.label}
           </button>
         ))}
       </div>
 
-      {/* System Tray */}
-      <div className="flex items-center space-x-4 pl-4 border-l border-neon-green/20 text-xs font-mono text-neon-green">
-        <div className="hidden md:block">NET: {ip}</div>
-        <div className="hidden md:block">CPU: {cpu}%</div>
-        <div className="text-neon-yellow">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+      <span aria-hidden className="text-neon-green/30">│</span>
+
+      {/* Open windows */}
+      <div className="flex-1 flex items-center gap-1 overflow-x-auto">
+        {windows.filter((w) => w.isOpen).map((win) => {
+          const focused = !win.isMinimized && activeWindowId === win.id;
+          return (
+            <button
+              key={win.id}
+              onClick={() => { playClick(); focusWindow(win.id); }}
+              className={`h-7 px-2 border rounded-[3px] min-w-[96px] max-w-[190px] truncate text-left transition-colors ${
+                focused
+                  ? 'bg-neon-green/15 border-neon-green/60 text-neon-green'
+                  : win.isMinimized
+                    ? 'border-white/10 text-gray-600 hover:text-gray-300 hover:border-white/30'
+                    : 'border-white/20 text-gray-400 hover:text-white'
+              }`}
+            >
+              <span aria-hidden>{focused ? '▸' : win.isMinimized ? '·' : '▹'}</span> {win.title}
+            </button>
+          );
+        })}
       </div>
 
+      {/* System tray */}
+      <div className="flex items-center gap-3 pl-2 border-l border-neon-green/30 text-neon-green">
+        <span className="hidden md:inline text-gray-400">NET <span className="text-neon-blue">{ip}</span></span>
+        <span className="hidden md:inline text-gray-400">CPU <span className="text-neon-green">{cpuBar(cpu)}</span> {cpu}%</span>
+        <span className="text-neon-yellow">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+      </div>
     </div>
   );
 };

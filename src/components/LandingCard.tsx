@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useOSStore } from '@/store/useOSStore';
 import { useSoundFX } from '@/hooks/useSoundFX';
 import { useChromaticClick } from '@/hooks/useChromaticClick';
+import ScrambleText from '@/components/fx/ScrambleText';
+import { Spinner } from '@/components/ascii/primitives';
 
 type Phase = 'power-on' | 'post' | 'warping';
 
@@ -60,26 +62,25 @@ const LandingCard = () => {
   }, [phase, visibleRows, playClick, triggerGlitch, setBooting]);
 
   return (
-    <div className={`relative z-20 w-full max-w-3xl mx-auto flex flex-col items-center transition-all duration-1000 ${phase === 'warping' ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+    <div data-os-ui className={`relative z-20 w-full max-w-3xl mx-auto flex flex-col items-center transition-all duration-1000 ${phase === 'warping' ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
 
-      {/* Main Glass Card Background & Container */}
-      <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl w-full flex flex-col items-center relative overflow-hidden group">
+      {/* Title-screen panel */}
+      <div className="bg-black/70 border border-neon-green/25 rounded-[3px] p-8 md:p-12 w-full flex flex-col items-center relative">
 
-        {/* Status - High Z to sit over any potential logo overlap */}
+        {/* Box-drawing title tab sitting on the top border */}
+        <div aria-hidden className="absolute -top-2.5 left-6 bg-bg-void px-2 font-mono text-[11px] tracking-widest text-neon-green/70">┤ d3_OS // BOOT ├</div>
+        <div aria-hidden className="absolute -bottom-2.5 right-6 bg-bg-void px-2 font-mono text-[11px] tracking-widest text-gray-600">┤ v3.0.4 ├</div>
+
+        {/* Status chip */}
         <div className="relative z-40 mb-8">
-            <div className="inline-flex items-center space-x-2 bg-black/80 border border-neon-green/30 rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(0,255,65,0.2)]">
-                <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-green opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-neon-green"></span>
-                </span>
-                <span className="text-[10px] font-bold text-neon-green font-mono tracking-widest uppercase">
-                    {phase === 'power-on' ? 'System Standby' : 'System Online'}
-                </span>
+            <div className="inline-flex items-center space-x-2 border border-neon-green/40 rounded-[3px] px-3 py-1 font-mono text-[10px] tracking-[0.25em] uppercase text-neon-green">
+                <span aria-hidden className="animate-pulse">●</span>
+                <ScrambleText key={phase} text={phase === 'power-on' ? 'SYSTEM STANDBY' : 'SYSTEM ONLINE'} />
             </div>
         </div>
 
         {/* Spacer for the Logo (Logo is sandwiched at Z-30 from App.tsx) */}
-        <div className="w-full h-[220px] pointer-events-none" />
+        <div className="w-full h-[270px] pointer-events-none" />
 
         {/*
           Fixed-height zone below the logo spacer, so the card's total height
@@ -91,29 +92,26 @@ const LandingCard = () => {
         */}
         <div className="min-h-[280px] w-full flex flex-col items-center justify-center relative z-10">
         {phase === 'power-on' ? (
-          /* Power On Prompt */
           <button
             onClick={handlePowerOn}
-            className={`group/btn relative inline-flex items-center justify-center space-x-2 px-8 py-3.5 font-mono text-sm text-neon-green border border-neon-green/40 rounded-lg transition-all duration-200 hover:bg-neon-green/10 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(0,255,65,0.3)] ${chromaticClass}`}
+            className={`group/btn inline-flex items-center justify-center px-4 sm:px-8 py-3.5 font-mono text-sm text-neon-green border border-neon-green/60 rounded-[3px] transition-colors duration-150 hover:bg-neon-green hover:text-black ${chromaticClass}`}
           >
-              <span>&gt;_</span>
-              <span className="tracking-widest">INITIALIZE SYSTEM</span>
-              <span className="w-2 h-4 bg-neon-green animate-pulse" />
+              <span className="tracking-[0.1em] sm:tracking-[0.25em] whitespace-nowrap">[ INITIALIZE SYSTEM ]</span>
+              <span aria-hidden className="ml-3 w-2 h-4 bg-current animate-pulse" />
           </button>
         ) : (
-          /* Boot Sequence */
-          <div className="w-full relative z-40">
-            <div className="grid grid-cols-1 gap-px bg-white/10 border border-white/10 rounded-lg overflow-hidden max-w-sm w-full mx-auto text-left text-xs font-mono">
-                {BOOT_ROWS.slice(0, visibleRows).map((row) => (
-                    <div key={row.label} className="bg-black/80 p-3 flex justify-between">
-                        <span className="text-gray-500">{row.label}:</span>
-                        <span className={row.color === 'green' ? 'text-neon-green' : 'text-white'}>{row.value}</span>
-                    </div>
-                ))}
-            </div>
+          <div className="w-full relative z-40 max-w-sm mx-auto text-left text-xs font-mono">
+            {BOOT_ROWS.slice(0, visibleRows).map((row) => (
+                <div key={row.label} className="flex items-baseline gap-2 py-0.5">
+                    <span className={row.color === 'green' ? 'text-neon-green' : 'text-gray-600'}>{row.color === 'green' ? '[ OK ]' : '[ -- ]'}</span>
+                    <span className="text-gray-500">{row.label}</span>
+                    <span aria-hidden className="flex-1 border-b border-dotted border-white/15 translate-y-[-3px]" />
+                    <ScrambleText className={row.color === 'green' ? 'text-neon-green' : 'text-white'} text={row.value} duration={320} />
+                </div>
+            ))}
 
-            <p className={`mt-6 text-center text-xs font-mono tracking-[0.3em] uppercase transition-opacity duration-300 ${visibleRows >= BOOT_ROWS.length ? 'text-neon-green opacity-100' : 'text-gray-600 opacity-0'}`}>
-                Starting Desktop Shell_
+            <p className={`mt-6 text-center text-xs tracking-[0.3em] uppercase transition-opacity duration-300 ${visibleRows >= BOOT_ROWS.length ? 'text-neon-green opacity-100' : 'opacity-0'}`}>
+                <Spinner /> Starting Desktop Shell<span className="animate-pulse">_</span>
             </p>
           </div>
         )}

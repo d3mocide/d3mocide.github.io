@@ -9,7 +9,7 @@ export default {
       colors: {
         neon: {
           yellow: '#FCEE0C',
-          green: '#00ff41',
+          green: 'rgb(var(--c-primary) / <alpha-value>)',
           pink: '#ff0055',
           blue: '#00B8FF',
           red: '#FF003C',

@@ -1,4 +1,26 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+export type ThemeId = 'green' | 'amber' | 'ice' | 'white';
+export const THEMES: ThemeId[] = ['green', 'amber', 'ice', 'white'];
+
+/** Saved window placement. `maximized` windows ignore x/y/w/h until restored. */
+export interface WindowGeometry {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  maximized?: boolean;
+}
+
+const BOOT_KEY = 'd3os.booted';
+const safeStorage = {
+  get: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } },
+  set: (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* storage unavailable */ } },
+  del: (k: string) => { try { localStorage.removeItem(k); } catch { /* storage unavailable */ } },
+};
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 export interface WindowState {
   id: string;
@@ -11,6 +33,30 @@ export interface WindowState {
 }
 
 interface OSState {
+  // Appearance / behaviour (persisted)
+  theme: ThemeId;
+  setTheme: (theme: ThemeId) => void;
+  scanlines: boolean;
+  setScanlines: (on: boolean) => void;
+  /** 0-100; 0 turns the ASCII background off */
+  fieldIntensity: number;
+  setFieldIntensity: (v: number) => void;
+  reduceMotion: boolean;
+  setReduceMotion: (on: boolean) => void;
+  /** transient: briefly swap the background for matrix rain (terminal easter egg) */
+  matrixUntil: number;
+  triggerMatrix: (ms?: number) => void;
+  /** id of the mesh node the user last picked on the background / map */
+  selectedNode: string | null;
+  selectNode: (id: string | null) => void;
+
+  /** transient: edge-snap preview while dragging a window */
+  snapHint: 'left' | 'right' | 'max' | null;
+  setSnapHint: (hint: 'left' | 'right' | 'max' | null) => void;
+  resetLayout: () => void;
+  windowGeometry: Record<string, WindowGeometry>;
+  setWindowGeometry: (id: string, geo: Partial<WindowGeometry>) => void;
+
   isBooting: boolean;
   setBooting: (status: boolean) => void;
   isShutDown: boolean;
@@ -40,11 +86,40 @@ interface OSState {
   focusWindow: (id: string) => void;
 }
 
-export const useOSStore = create<OSState>((set) => ({
-  isBooting: true,
-  setBooting: (status) => set({ isBooting: status }),
+export const useOSStore = create<OSState>()(persist((set) => ({
+  theme: 'green',
+  setTheme: (theme) => set({ theme }),
+  scanlines: true,
+  setScanlines: (scanlines) => set({ scanlines }),
+  fieldIntensity: 70,
+  setFieldIntensity: (fieldIntensity) => set({ fieldIntensity }),
+  reduceMotion: prefersReducedMotion(),
+  setReduceMotion: (reduceMotion) => set({ reduceMotion }),
+  matrixUntil: 0,
+  triggerMatrix: (ms = 12000) => set({ matrixUntil: Date.now() + ms }),
+  selectedNode: null,
+  selectNode: (selectedNode) => set({ selectedNode }),
+
+  snapHint: null,
+  setSnapHint: (snapHint) => set({ snapHint }),
+  resetLayout: () => set({ windowGeometry: {} }),
+  windowGeometry: {},
+  setWindowGeometry: (id, geo) => set((state) => ({
+    windowGeometry: { ...state.windowGeometry, [id]: { ...(state.windowGeometry[id] ?? { x: 100, y: 100, w: 600, h: 400 }), ...geo } },
+  })),
+
+  // First visit (or after shutdown) shows the boot sequence; repeat visits go straight to the desktop.
+  isBooting: !safeStorage.get(BOOT_KEY),
+  setBooting: (status) => {
+    if (status) safeStorage.del(BOOT_KEY);
+    else safeStorage.set(BOOT_KEY, '1');
+    set({ isBooting: status });
+  },
   isShutDown: false,
-  setShutDown: (status) => set({ isShutDown: status }),
+  setShutDown: (status) => {
+    if (status) safeStorage.del(BOOT_KEY);
+    set({ isShutDown: status });
+  },
 
   // Sound settings
   volume: 25,
@@ -102,5 +177,18 @@ export const useOSStore = create<OSState>((set) => ({
       windows: state.windows.map(w => w.id === id ? { ...w, zIndex: maxZ + 1, isMinimized: false } : w),
       activeWindowId: id
     };
+  }),
+}), {
+  name: 'd3os.settings',
+  version: 1,
+  partialize: (state) => ({
+    theme: state.theme,
+    scanlines: state.scanlines,
+    fieldIntensity: state.fieldIntensity,
+    reduceMotion: state.reduceMotion,
+    volume: state.volume,
+    isMuted: state.isMuted,
+    soundEnabled: state.soundEnabled,
+    windowGeometry: state.windowGeometry,
   }),
 }));

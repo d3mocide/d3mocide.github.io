@@ -6,17 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- SEO Meta Tags -->
-    <title>d3FRAG // d3_OS - Cyberpunk Web Operating System</title>
-    <meta name="description" content="d3FRAG Networks presents d3_OS: An immersive cyberpunk web operating system built with React. Experience a hacker-terminal style interface with draggable windows, integrated browser, and retro-futuristic aesthetics." />
-    <meta name="keywords" content="d3FRAG, d3_OS, cyberpunk, web os, portfolio, terminal, hacker, react, web application, retro computing" />
+    <title>d3FRAG // d3_OS - ASCII Web Operating System</title>
+    <meta name="description" content="d3FRAG Networks presents d3_OS: a retro text-mode web operating system built with React. A living ASCII mesh network of our projects, draggable and snappable windows, a real terminal, and a web firmware flasher." />
+    <meta name="keywords" content="d3FRAG, d3_OS, ascii, web os, portfolio, terminal, mesh network, LoRa, RF, react, retro computing" />
     <meta name="author" content="d3FRAG Networks" />
     <meta name="theme-color" content="#00ff41" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://d3frag.net/" />
-    <meta property="og:title" content="d3FRAG // d3_OS - Cyberpunk Web Operating System" />
-    <meta property="og:description" content="An immersive cyberpunk web operating system. Experience the future of retro computing." />
+    <meta property="og:title" content="d3FRAG // d3_OS - ASCII Web Operating System" />
+    <meta property="og:description" content="A retro text-mode web operating system. Explore d3FRAG Networks' projects on a living ASCII mesh map." />
     <meta property="og:image" content="https://d3frag.net/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -24,8 +24,8 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://d3frag.net/" />
-    <meta property="twitter:title" content="d3FRAG // d3_OS - Cyberpunk Web Operating System" />
-    <meta property="twitter:description" content="An immersive cyberpunk web operating system. Experience the future of retro computing." />
+    <meta property="twitter:title" content="d3FRAG // d3_OS - ASCII Web Operating System" />
+    <meta property="twitter:description" content="A retro text-mode web operating system. Explore d3FRAG Networks' projects on a living ASCII mesh map." />
     <meta property="twitter:image" content="https://d3frag.net/og-image.png" />
     
     <link
@@ -35,19 +35,8 @@
   </head>
   <body class="bg-[#050505] text-[#e5e5e5] overflow-hidden">
     <style>
-      @keyframes glitch {
-        0%, 100% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(-2px, -2px); }
-        60% { transform: translate(2px, 2px); }
-        80% { transform: translate(2px, -2px); }
-      }
-      @keyframes pulse-glow {
-        0%, 100% { box-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41; }
-        50% { box-shadow: 0 0 20px #00ff41, 0 0 30px #00ff41; }
-      }
-      @keyframes spin {
-        to { transform: rotate(360deg); }
+      @keyframes blink {
+        to { visibility: hidden; }
       }
       .loader-container {
         position: fixed;
@@ -59,21 +48,13 @@
         justify-content: center;
         z-index: 9999;
       }
-      .loader-ring {
-        width: 80px;
-        height: 80px;
-        border: 3px solid transparent;
-        border-top-color: #00ff41;
-        border-radius: 50%;
-        animation: spin 1s linear infinite, pulse-glow 2s ease-in-out infinite;
-      }
       .loader-text {
         margin-top: 24px;
         font-family: 'JetBrains Mono', monospace;
         font-size: 14px;
         color: #00ff41;
         letter-spacing: 0.3em;
-        animation: glitch 3s infinite;
+        animation: blink 1.1s steps(2, start) infinite;
       }
       .loader-subtext {
         margin-top: 8px;
@@ -85,8 +66,7 @@
     </style>
     <div id="root">
       <div class="loader-container">
-        <div class="loader-ring"></div>
-        <div class="loader-text">INITIALIZING</div>
+        <div class="loader-text">INITIALIZING_</div>
         <div class="loader-subtext">d3FRAG NETWORKS</div>
       </div>
     </div>

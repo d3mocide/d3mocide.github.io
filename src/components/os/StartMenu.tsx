@@ -1,5 +1,4 @@
 import { useRef, useEffect } from 'react';
-import { Power, Settings, Folder, Terminal, User, LogOut, Zap } from 'lucide-react';
 import { useOSStore } from '@/store/useOSStore';
 import { m, AnimatePresence } from 'framer-motion';
 
@@ -19,11 +18,14 @@ const StartMenu = ({ isOpen, onClose }: StartMenuProps) => {
       }
     };
 
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEsc);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEsc);
     };
   }, [isOpen, onClose]);
 
@@ -37,75 +39,84 @@ const StartMenu = ({ isOpen, onClose }: StartMenuProps) => {
       {isOpen && (
         <m.div
           ref={menuRef}
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          className="fixed bottom-20 left-4 w-72 bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 8 }}
+          transition={{ duration: 0.12, ease: "easeOut" }}
+          data-os-ui className="fixed bottom-12 left-2 w-72 bg-bg-panel border border-neon-green/40 rounded-[3px] shadow-[0_12px_40px_rgba(0,0,0,0.7)] z-50 overflow-hidden font-mono"
         >
             {/* Header */}
-            <div className="p-4 border-b border-white/10 bg-white/5">
-                <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-neon-green/20 flex items-center justify-center border border-neon-green/30">
-                        <User size={20} className="text-neon-green" />
-                    </div>
-                    <div>
-                        <div className="text-white font-medium text-sm">Guest User</div>
-                        <div className="text-xs text-neon-green font-mono">ADMINISTRATOR</div>
-                    </div>
-                </div>
+            <div className="px-4 py-3 border-b border-neon-green/30 bg-neon-green/5">
+                <div className="text-neon-green text-xs tracking-[0.25em]">d3_OS // SESSION</div>
+                <div className="mt-1 text-sm text-white">guest<span className="text-gray-500">@d3frag</span> <span className="text-neon-yellow text-xs">[ADMIN]</span></div>
             </div>
 
             {/* Application List */}
             <div className="p-2 space-y-1">
                 <button 
                     onClick={() => handleItemClick(() => openWindow('terminal', 'D3_TERM v2.0'))}
-                    className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors group"
+                    className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors group"
                 >
-                    <Terminal size={18} className="text-neon-blue group-hover:text-white transition-colors" />
-                    <span className="text-sm font-medium">Terminal</span>
+                    <span aria-hidden className="w-6 text-neon-blue group-hover:text-white transition-colors">&gt;_</span>
+                    <span className="text-sm">Terminal</span>
                 </button>
                 
                 <button 
                   onClick={() => handleItemClick(() => openWindow('projects', 'PROJECT_EXPLORER'))}
-                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors group"
+                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors group"
                 >
-                    <Folder size={18} className="text-neon-pink group-hover:text-white transition-colors" />
-                    <span className="text-sm font-medium">Projects</span>
+                    <span aria-hidden className="w-6 text-neon-pink group-hover:text-white transition-colors">[#]</span>
+                    <span className="text-sm">Projects</span>
                 </button>
 
                 <button
                   onClick={() => handleItemClick(() => openWindow('flasher', 'WEB_FLASHER'))}
-                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors group"
+                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors group"
                 >
-                    <Zap size={18} className="text-neon-green group-hover:text-white transition-colors" />
-                    <span className="text-sm font-medium">Web Flasher</span>
+                    <span aria-hidden className="w-6 text-neon-green group-hover:text-white transition-colors">[~]</span>
+                    <span className="text-sm">Web Flasher</span>
+                </button>
+
+                <button
+                  onClick={() => handleItemClick(() => openWindow('mesh', 'MESH_MAP'))}
+                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors group"
+                >
+                    <span aria-hidden className="w-6 text-neon-yellow group-hover:text-white transition-colors">(@)</span>
+                    <span className="text-sm">Mesh Map</span>
+                </button>
+
+                <button
+                  onClick={() => handleItemClick(() => openWindow('about', 'ABOUT'))}
+                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors group"
+                >
+                    <span aria-hidden className="w-6 text-neon-blue group-hover:text-white transition-colors">[?]</span>
+                    <span className="text-sm">About</span>
                 </button>
 
                  <button
                   onClick={() => handleItemClick(() => openWindow('settings', 'SYSTEM_CONFIG'))}
-                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors group"
+                  className="w-full flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors group"
                 >
-                    <Settings size={18} className="text-neon-yellow group-hover:text-white transition-colors" />
-                    <span className="text-sm font-medium">System Config</span>
+                    <span aria-hidden className="w-6 text-neon-yellow group-hover:text-white transition-colors">[*]</span>
+                    <span className="text-sm">System Config</span>
                 </button>
             </div>
 
             {/* Footer */}
-            <div className="p-2 border-t border-white/10 grid grid-cols-2 gap-2">
+            <div className="p-2 border-t border-neon-green/30 grid grid-cols-2 gap-2">
                  <button 
                   onClick={() => handleItemClick(() => setBooting(true))}
-                  className="flex items-center justify-center space-x-2 px-3 py-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                  className="flex items-center justify-center space-x-2 px-3 py-2 text-gray-400 hover:text-white hover:bg-neon-green/10 rounded-[3px] transition-colors"
                 >
-                    <LogOut size={16} />
-                    <span className="text-xs font-medium">Log Out</span>
+                    <span aria-hidden>&lt;-</span>
+                    <span className="text-xs">Log Out</span>
                 </button>
                  <button 
                   onClick={() => handleItemClick(() => setShutDown(true))}
-                  className="flex items-center justify-center space-x-2 px-3 py-2 text-neon-red hover:bg-neon-red/10 rounded-lg transition-colors"
+                  className="flex items-center justify-center space-x-2 px-3 py-2 text-neon-red hover:bg-neon-red/10 rounded-[3px] transition-colors"
                 >
-                    <Power size={16} />
-                    <span className="text-xs font-medium">Shutdown</span>
+                    <span aria-hidden>(!)</span>
+                    <span className="text-xs">Shutdown</span>
                 </button>
             </div>
         </m.div>

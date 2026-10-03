@@ -14,8 +14,6 @@
     "clsx": "^2.1.0",
     "esp-web-tools": "^10.4.0",
     "framer-motion": "^11.0.3",
-    "howler": "^2.2.4",
-    "lucide-react": "^0.323.0",
     "re-resizable": "^6.11.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

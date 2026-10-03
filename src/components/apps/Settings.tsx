@@ -1,166 +1,133 @@
-import { Volume2, VolumeX, Info, Palette } from 'lucide-react';
 import { useIP } from '@/hooks/useIP';
-import { useOSStore } from '@/store/useOSStore';
+import { useOSStore, THEMES, type ThemeId } from '@/store/useOSStore';
+import { LeaderRow, Rule, TextButton, TextSlider, Toggle } from '@/components/ascii/primitives';
+import { APPS } from '@/lib/apps';
+
+const SOUNDS = [
+  { key: 'click', label: 'Click SFX' },
+  { key: 'hover', label: 'Hover SFX' },
+  { key: 'keypress', label: 'Keypress SFX' },
+  { key: 'error', label: 'Error SFX' },
+] as const;
 
 const Settings = () => {
-  const { volume, isMuted, setVolume, setMuted, soundEnabled, toggleSound } = useOSStore();
+  const {
+    volume, isMuted, setVolume, setMuted, soundEnabled, toggleSound,
+    theme, setTheme, scanlines, setScanlines, fieldIntensity, setFieldIntensity, reduceMotion, setReduceMotion, resetLayout,
+  } = useOSStore();
   const { ip } = useIP();
 
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseInt(e.target.value);
-    setVolume(newVolume);
-    if (newVolume > 0 && isMuted) {
-      setMuted(false);
-    }
-  };
-
-  const toggleMute = () => {
-    setMuted(!isMuted);
+  const handleVolumeChange = (v: number) => {
+    setVolume(v);
+    if (v > 0 && isMuted) setMuted(false);
   };
 
   return (
-    <div className="h-full flex flex-col p-6 space-y-6">
-      {/* Header */}
-      <div className="border-b border-neon-green/20 pb-4">
-        <h2 className="text-2xl font-bold text-neon-green text-glow-green">System Settings</h2>
-        <p className="text-sm text-gray-400 mt-1">Configure your d3_OS experience</p>
-      </div>
+    <div className="h-full flex flex-col p-4 space-y-6">
+      <p className="text-xs text-gray-400">Configure your d3_OS experience.</p>
 
-      {/* Audio Settings */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2 text-neon-blue text-glow-blue">
-          <Volume2 size={20} />
-          <h3 className="text-lg font-semibold">Audio</h3>
-        </div>
-
-        <div className="bg-black/40 border border-neon-green/20 rounded-lg p-4 space-y-4">
-          {/* Volume Control */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="text-sm text-gray-300">SFX Volume</label>
-              <span className="text-sm text-neon-green font-mono">{isMuted ? 'MUTED' : `${volume}%`}</span>
-            </div>
-            
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={toggleMute}
-                className="p-2 hover:bg-neon-green/10 rounded transition-colors text-neon-green"
-              >
-                {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-              </button>
-              
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={isMuted ? 0 : volume}
-                onChange={handleVolumeChange}
-                disabled={isMuted}
-                className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer
-                  [&::-webkit-slider-thumb]:appearance-none
-                  [&::-webkit-slider-thumb]:w-4
-                  [&::-webkit-slider-thumb]:h-4
-                  [&::-webkit-slider-thumb]:rounded-full
-                  [&::-webkit-slider-thumb]:bg-neon-green
-                  [&::-webkit-slider-thumb]:cursor-pointer
-                  [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(0,255,65,0.5)]
-                  disabled:opacity-50 disabled:cursor-not-allowed"
-              />
+      {/* Audio */}
+      <section className="space-y-3">
+        <Rule label="AUDIO" tone="blue" />
+        <div className="space-y-3 px-1">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-gray-300">SFX Volume</span>
+            <span className="text-neon-green">{isMuted ? 'MUTED' : `${volume}%`}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <TextButton boxed tone={isMuted ? 'red' : 'green'} onClick={() => setMuted(!isMuted)}>
+              {isMuted ? 'UNMUTE' : 'MUTE'}
+            </TextButton>
+            <div className="flex-1 min-w-0">
+              <TextSlider label="SFX volume" value={isMuted ? 0 : volume} onChange={handleVolumeChange} disabled={isMuted} />
             </div>
           </div>
 
-          {/* Sound Effects List */}
-          <div className="pt-2 border-t border-neon-green/10">
-            <p className="text-xs text-gray-500 mb-2">Active Sound Effects (click to toggle):</p>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <button
-                onClick={() => toggleSound('click')}
-                className="flex items-center space-x-2 hover:bg-neon-green/5 p-1 rounded transition-colors cursor-pointer"
-              >
-                <div className={`w-2 h-2 rounded-full ${soundEnabled.click ? 'bg-neon-green animate-pulse' : 'bg-gray-600'}`}></div>
-                <span className={soundEnabled.click ? 'text-gray-300' : 'text-gray-600 line-through'}>Click SFX</span>
-              </button>
-              <button
-                onClick={() => toggleSound('hover')}
-                className="flex items-center space-x-2 hover:bg-neon-green/5 p-1 rounded transition-colors cursor-pointer"
-              >
-                <div className={`w-2 h-2 rounded-full ${soundEnabled.hover ? 'bg-neon-green animate-pulse' : 'bg-gray-600'}`}></div>
-                <span className={soundEnabled.hover ? 'text-gray-300' : 'text-gray-600 line-through'}>Hover SFX</span>
-              </button>
-              <button
-                onClick={() => toggleSound('keypress')}
-                className="flex items-center space-x-2 hover:bg-neon-green/5 p-1 rounded transition-colors cursor-pointer"
-              >
-                <div className={`w-2 h-2 rounded-full ${soundEnabled.keypress ? 'bg-neon-green animate-pulse' : 'bg-gray-600'}`}></div>
-                <span className={soundEnabled.keypress ? 'text-gray-300' : 'text-gray-600 line-through'}>Keypress SFX</span>
-              </button>
-              <button
-                onClick={() => toggleSound('error')}
-                className="flex items-center space-x-2 hover:bg-neon-green/5 p-1 rounded transition-colors cursor-pointer"
-              >
-                <div className={`w-2 h-2 rounded-full ${soundEnabled.error ? 'bg-neon-green animate-pulse' : 'bg-gray-600'}`}></div>
-                <span className={soundEnabled.error ? 'text-gray-300' : 'text-gray-600 line-through'}>Error SFX</span>
-              </button>
+          <div>
+            <p className="text-[11px] text-gray-500 mb-1">Active sound effects (click to toggle):</p>
+            <div className="grid grid-cols-2 gap-1">
+              {SOUNDS.map((s) => (
+                <Toggle key={s.key} checked={soundEnabled[s.key]} onChange={() => toggleSound(s.key)}>
+                  {s.label}
+                </Toggle>
+              ))}
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Appearance Settings */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2 text-neon-blue text-glow-blue">
-          <Palette size={20} />
-          <h3 className="text-lg font-semibold">Appearance</h3>
-        </div>
+      {/* Appearance */}
+      <section className="space-y-3">
+        <Rule label="APPEARANCE" tone="pink" />
+        <div className="space-y-3 px-1">
+          <div>
+            <p className="text-xs text-gray-400 mb-1">Theme</p>
+            <div className="flex flex-wrap gap-x-3 gap-y-1" role="radiogroup" aria-label="Theme">
+              {THEMES.map((t: ThemeId) => (
+                <button
+                  key={t}
+                  type="button"
+                  role="radio"
+                  aria-checked={theme === t}
+                  onClick={() => setTheme(t)}
+                  className={`text-xs font-mono uppercase tracking-wider px-1 rounded-[3px] transition-colors ${
+                    theme === t ? 'text-neon-green bg-neon-green/10' : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  {theme === t ? '(●)' : '( )'} {t}
+                </button>
+              ))}
+            </div>
+          </div>
 
-        <div className="bg-black/40 border border-neon-green/20 rounded-lg p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-300">Theme</span>
-            <span className="text-sm text-neon-green font-mono">M4TRIX</span>
+          <div>
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-gray-400">ASCII field intensity</span>
+              <span className="text-neon-green">{fieldIntensity === 0 ? 'OFF' : `${fieldIntensity}%`}</span>
+            </div>
+            <TextSlider label="ASCII field intensity" value={fieldIntensity} onChange={setFieldIntensity} />
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-300">Scanlines</span>
-            <span className="text-sm text-neon-green font-mono">ENABLED</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-300">Phosphor Glow</span>
-            <span className="text-sm text-neon-green font-mono">ENABLED</span>
-          </div>
-        </div>
-      </div>
 
-      {/* System Info */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2 text-neon-blue text-glow-blue">
-          <Info size={20} />
-          <h3 className="text-lg font-semibold">System Information</h3>
-        </div>
-
-        <div className="bg-black/40 border border-neon-green/20 rounded-lg p-4 font-mono text-xs space-y-2">
-          <div className="flex justify-between">
-            <span className="text-gray-400">OS Version:</span>
-            <span className="text-neon-green">d3_OS v1.0.0</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Kernel:</span>
-            <span className="text-neon-green">d3FRAG v3.0.4</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Build:</span>
-            <span className="text-neon-green">2026.01.24</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Network:</span>
-            <span className="text-neon-green">{ip}</span>
+          <div className="grid grid-cols-2 gap-1">
+            <Toggle checked={scanlines} onChange={() => setScanlines(!scanlines)}>Scanlines</Toggle>
+            <Toggle checked={reduceMotion} onChange={() => setReduceMotion(!reduceMotion)}>Reduce motion</Toggle>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Footer */}
-      <div className="flex-1"></div>
-      <div className="text-center text-xs text-gray-600 border-t border-neon-green/10 pt-4">
+      {/* Keyboard */}
+      <section className="space-y-3">
+        <Rule label="KEYBOARD" tone="blue" />
+        <div className="grid grid-cols-2 gap-x-4 gap-y-1 px-1 text-xs">
+          {APPS.map((a) => (
+            <div key={a.id} className="flex justify-between"><span className="text-gray-400">{a.label}</span><span className="text-neon-green">Alt+{a.key}</span></div>
+          ))}
+          <div className="flex justify-between"><span className="text-gray-400">Focus window</span><span className="text-neon-green">Alt+1…9</span></div>
+          <div className="flex justify-between"><span className="text-gray-400">Prev / next</span><span className="text-neon-green">Alt+[ ]</span></div>
+          <div className="flex justify-between"><span className="text-gray-400">Close</span><span className="text-neon-green">Alt+W</span></div>
+          <div className="flex justify-between"><span className="text-gray-400">Maximize</span><span className="text-neon-green">Alt+Enter</span></div>
+        </div>
+        <div className="px-1 flex items-center gap-3 text-xs text-gray-500">
+          <TextButton boxed tone="gray" onClick={resetLayout}>RESET WINDOW LAYOUT</TextButton>
+          <span>Drag a window to a screen edge to snap it.</span>
+        </div>
+      </section>
+
+      {/* System info */}
+      <section className="space-y-3">
+        <Rule label="SYSTEM INFORMATION" tone="yellow" />
+        <div className="space-y-2 px-1">
+          <LeaderRow label="OS Version">d3_OS v1.0.0</LeaderRow>
+          <LeaderRow label="Kernel">d3FRAG v3.0.4</LeaderRow>
+          <LeaderRow label="Build">2026.01.24</LeaderRow>
+          <LeaderRow label="Network" tone="blue">{ip}</LeaderRow>
+        </div>
+      </section>
+
+      <div className="flex-1" />
+      <div className="text-center text-[11px] text-gray-600 border-t border-dashed border-white/10 pt-3">
         <p>d3FRAG NETWORKS © 2026</p>
-        <p className="text-neon-green/50">SYSTEM ONLINE</p>
+        <p className="text-neon-green/60">● SYSTEM ONLINE</p>
       </div>
     </div>
   );

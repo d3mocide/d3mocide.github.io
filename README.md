@@ -7,19 +7,24 @@
 
 ## 🌐 Overview
 
-**d3_OS** is an immersive, browser-based operating system that brings the cyberpunk aesthetic to life. Built with modern web technologies, it features a fully functional window management system, integrated applications, and a retro-futuristic terminal interface.
+**d3_OS** is a browser-based, text-mode operating system for d3FRAG Networks. The background is a living ASCII mesh network whose named nodes are the pinned GitHub repos, with a real window manager, a terminal and a web firmware flasher on top.
 
 ### ✨ Features
 
-- 🪟 **Window Management** - Draggable, resizable windows with z-index stacking
-- 💻 **Terminal Application** - Interactive command-line interface with easter eggs
+- 🕸️ **Living ASCII Mesh** - The background is a character-based mesh network: pinned repos are named nodes, packets hop between them, signal readouts tick (simulated), and clicking a node opens it on the Mesh Map
+- 🗺️ **Mesh Map** - Interactive map + accessible node list with repo details, links and flash buttons
+- 🪟 **Window Management** - Draggable, resizable windows with maximize, edge snapping (drag to a screen edge), and remembered positions
+- ⌨️ **Keyboard Shortcuts** - `Alt+T/P/F/M/A/S` open apps, `Alt+1…9` focus, `Alt+[ ]` cycle, `Alt+W` close, `Alt+Enter` maximize
+- 🖥️ **Desktop Icons** - ASCII launchers (double-click, or tap on touch devices)
+- 💻 **Terminal** - Command history, Tab completion, `neofetch`, `banner`, `open <repo>`, `theme`, `matrix` and more
 - 📁 **Project Explorer** - Portfolio showcase, live-synced with your pinned GitHub repos
 - ⚡ **Web Flasher** - Flash firmware to SBCs/microcontrollers over USB via Web Serial
-- 🌐 **Integrated Browser** - Iframe-based web browser within the OS
-- 🎨 **Cyberpunk Aesthetics** - Matrix rain, scanlines, glitch effects, neon colors
-- 🔊 **Audio System** - Immersive sound effects for interactions
+- ℹ️ **About** - Terminal-style readout of the org and its projects
+- 🎨 **Themes** - Green, amber, ice and white phosphor, switchable in System Config or with `theme <name>`
+- ⚙️ **Real Settings** - ASCII field intensity, scanlines, reduce-motion (follows your OS setting by default), sound options; all remembered between visits
+- 🔊 **Audio System** - Synthesized sound effects for interactions
 - 🎯 **Start Menu** - Application launcher with system controls
-- ⚡ **Shutdown/Logout** - CRT-off animation and session management
+- ⚡ **Boot Sequence** - Shown on a first visit and after shutdown; repeat visits go straight to the desktop (`reboot` replays it)
 
 ## 🌍 Live Site
 
@@ -65,7 +70,7 @@ npm run dev
 - **State Management**: Zustand
 - **Animations**: Framer Motion
 - **Window System**: react-draggable + re-resizable
-- **Audio**: Howler.js
+- **Audio**: Web Audio API (synthesized)
 - **Containerization**: Docker
 
 ## 📁 Project Structure
@@ -74,9 +79,11 @@ npm run dev
 d3_os/
 ├── src/
 │   ├── components/
-│   │   ├── apps/          # Application components
-│   │   ├── os/             # OS shell components
-│   │   └── fx/             # Visual effects
+│   │   ├── apps/          # Application components (Terminal, MeshMap, ...)
+│   │   ├── ascii/         # Text-mode UI primitives (rules, tags, toggles, slider)
+│   │   ├── os/             # OS shell (windows, taskbar, desktop icons)
+│   │   └── fx/             # ASCII field, scanlines, text scramble
+│   ├── lib/                # Mesh model + simulation, glyph atlas, ASCII art, apps registry
 │   ├── config/             # Static app config (e.g. flashTargets.ts)
 │   ├── store/              # Zustand state management
 │   ├── hooks/              # Custom React hooks
@@ -91,21 +98,39 @@ d3_os/
 
 ### Terminal Commands
 
-- `help` - Display available commands
-- `list` - Show installed applications
-- `projects` - Launch Project Explorer
-- `flasher` - Launch Web Flasher
-- `clear` - Clear terminal output
-- `whoami` - Display system information
-- `matrix` - Enable Matrix mode
+- `help` - Display available commands (Tab completes, ↑/↓ browse history)
+- `about`, `whois d3frag`, `whoami`, `neofetch`, `banner`, `date`, `echo ...`
+- `ls`, `cat README.txt` / `cat about.txt`
+- `open <repo>` - Show a pinned project on the Mesh Map (`open` alone lists them)
+- `mesh`, `projects`, `flasher`, `settings` - Launch an app
+- `theme [green|amber|ice|white]` - List or switch the colour theme
+- `matrix` - Take the red pill (the background turns into falling code for ~12s)
+- `ping <host>` - Simulated ping (nothing leaves your browser)
+- `keys` - Keyboard shortcuts
+- `reboot` - Replay the boot sequence
 - `sudo` - Try it and see 😉
+
+### Keyboard Shortcuts
+
+| Keys | Action |
+| --- | --- |
+| `Alt+T` `P` `F` `M` `A` `S` | Terminal, Projects, Flasher, Mesh Map, About, Config |
+| `Alt+1`…`9` | Focus the nth open window |
+| `Alt+[` / `Alt+]` | Previous / next window |
+| `Alt+W` / `Alt+N` | Close / minimize the focused window |
+| `Alt+Enter` | Maximize / restore |
 
 ### Applications
 
 - **D3_TERM** - Interactive terminal
+- **MESH_MAP** - Interactive map of the pinned-repo mesh network
 - **PROJECT_EXPLORER** - Portfolio browser, live-synced with pinned GitHub repos
 - **WEB_FLASHER** - Flash firmware to SBCs/microcontrollers over USB
-- **BROWSER** - Integrated web browser
+- **ABOUT** - Org and project readout
+- **SYSTEM_CONFIG** - Theme, ASCII field, scanlines, motion, sound, keyboard reference
+- **BROWSER** - Integrated web browser (opened programmatically)
+
+> The Mesh Map's packets and signal strength (dBm) are **simulated** for atmosphere. Repo names, descriptions, stars and links are real, synced from GitHub.
 
 ## 📌 Pinned Repos Sync
 
@@ -195,8 +220,9 @@ Contributions, issues, and feature requests are welcome!
 
 ## 🙏 Acknowledgments
 
-- Inspired by classic terminal UIs and cyberpunk aesthetics
-- Matrix rain effect inspired by The Matrix (1999)
+- Inspired by classic terminal UIs and text-mode computing
+- The `matrix` easter egg is a nod to The Matrix (1999)
+- Block lettering in the style of figlet's "ANSI Shadow" font
 - Built with modern web technologies
 
 ---
