@@ -89,7 +89,7 @@ const LandingCard = () => {
         </div>
 
         {/* Spacer for the Logo (Logo is sandwiched at Z-30 from App.tsx) */}
-        <div className="w-full h-[250px] pointer-events-none" />
+        <div className="w-full h-[270px] pointer-events-none" />
 
         {/*
           Fixed-height zone below the logo spacer, so the card's total height
