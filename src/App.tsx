@@ -1,6 +1,6 @@
 import { LazyMotion, domAnimation } from 'framer-motion';
 import { useOSStore } from '@/store/useOSStore';
-import MatrixRain from '@/components/MatrixRain';
+import DotField from '@/components/fx/DotField';
 import LandingCard from '@/components/LandingCard';
 import Desktop from '@/components/os/Desktop';
 import Scanlines from '@/components/fx/Scanlines';
@@ -14,7 +14,7 @@ function App() {
     <div className="relative min-h-screen w-full overflow-hidden bg-bg-void text-gray-100 flex items-center justify-center">
 
       {/* Persistent Background FX */}
-      <MatrixRain />
+      <DotField />
       
       {/* Background Branding - Stays behind windows but in front of wallpaper */}
       {/* When booting: Z-30 & Moved UP to align with Card Gap */}
@@ -37,9 +37,9 @@ function App() {
             <p className="mt-4 text-sm animate-pulse opacity-70">IT IS NOW SAFE TO TURN OFF YOUR TERMINAL</p>
             <button 
                 onClick={() => window.location.reload()} 
-                className="mt-8 px-6 py-2 border border-neon-red/30 hover:bg-neon-red/10 rounded transition-colors text-xs"
+                className="mt-8 px-6 py-2 border border-neon-red/40 hover:bg-neon-red/10 rounded-[3px] transition-colors text-xs"
             >
-                MANUAL RESTART
+                [ MANUAL RESTART ]
             </button>
         </div>
       ) : isBooting ? (

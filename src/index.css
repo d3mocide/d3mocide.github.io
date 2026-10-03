@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply antialiased text-gray-100 bg-bg-void;
+    @apply antialiased text-gray-100 bg-bg-void font-mono;
   }
 
   /* Custom Scrollbar - Cyberpunk Theme */
@@ -20,12 +20,12 @@
 
   *::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
+    border-radius: 0;
   }
 
   *::-webkit-scrollbar-thumb {
     background: rgba(0, 255, 65, 0.5);
-    border-radius: 5px;
+    border-radius: 0;
     border: 2px solid rgba(0, 0, 0, 0.3);
   }
 

@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import Draggable from 'react-draggable';
 import { m, AnimatePresence } from 'framer-motion';
-import { X, Minus } from 'lucide-react';
 import { Resizable } from 're-resizable';
 import { useOSStore } from '@/store/useOSStore';
 import { useSoundFX } from '@/hooks/useSoundFX';
@@ -36,30 +35,33 @@ const WindowFrame = ({
   // The rest stay tracked in the store so the taskbar can still switch between them.
   if (isMobile && windowState.id !== activeWindowId) return null;
 
+  const isActive = activeWindowId === id;
+
   const frameBody = (
-    <CyberFrame className="h-full w-full">
-      {/* Header / Handle */}
-      <div className={`window-handle flex justify-between items-center p-2 bg-neon-green/10 border-b border-neon-green/30 select-none ${isMobile ? '' : 'cursor-grab active:cursor-grabbing'}`}>
-          <div className="flex items-center space-x-2">
-          <span className="w-2 h-2 bg-neon-green animate-pulse rounded-full" />
-          <span className="font-mono text-neon-green text-sm uppercase tracking-widest">{title}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-          <button
-              onClick={() => { playClick(); minimizeWindow(id); }}
-              onMouseEnter={playHover}
-              className="p-1 hover:bg-neon-green/20 text-neon-green rounded transition-colors"
-          >
-              <Minus size={14} />
-          </button>
-          <button
-              onClick={() => { playClick(); closeWindow(id); }}
-              onMouseEnter={playHover}
-              className="p-1 hover:bg-neon-red/20 text-neon-red rounded transition-colors"
-          >
-              <X size={14} />
-          </button>
-          </div>
+    <CyberFrame className="h-full w-full" active={isActive}>
+      {/* Title bar */}
+      <div className={`window-handle flex justify-between items-center px-3 py-1.5 border-b select-none font-mono text-xs uppercase tracking-[0.2em] ${isActive ? 'bg-neon-green/10 border-neon-green/40 text-neon-green' : 'bg-white/[0.02] border-white/10 text-gray-500'} ${isMobile ? '' : 'cursor-grab active:cursor-grabbing'}`}>
+          <span className="truncate">
+            <span aria-hidden className={isActive ? 'text-neon-green' : 'text-gray-600'}>▌</span> {title}
+          </span>
+          <span className="flex items-center space-x-1 shrink-0">
+            <button
+                aria-label="Minimize"
+                onClick={() => { playClick(); minimizeWindow(id); }}
+                onMouseEnter={playHover}
+                className="px-1.5 hover:bg-neon-green/20 hover:text-white transition-colors"
+            >
+                [_]
+            </button>
+            <button
+                aria-label="Close"
+                onClick={() => { playClick(); closeWindow(id); }}
+                onMouseEnter={playHover}
+                className="px-1.5 text-neon-red hover:bg-neon-red/20 hover:text-white transition-colors"
+            >
+                [×]
+            </button>
+          </span>
       </div>
 
       {/* Content */}

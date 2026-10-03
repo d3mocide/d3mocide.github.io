@@ -16,7 +16,7 @@
 - 📁 **Project Explorer** - Portfolio showcase, live-synced with your pinned GitHub repos
 - ⚡ **Web Flasher** - Flash firmware to SBCs/microcontrollers over USB via Web Serial
 - 🌐 **Integrated Browser** - Iframe-based web browser within the OS
-- 🎨 **Cyberpunk Aesthetics** - Matrix rain, scanlines, glitch effects, neon colors
+- 🎨 **Dot-Matrix Retro UI** - Animated dot-field background, dot-matrix logo, hairline text-mode window chrome, neon green with pink/blue accents
 - 🔊 **Audio System** - Immersive sound effects for interactions
 - 🎯 **Start Menu** - Application launcher with system controls
 - ⚡ **Shutdown/Logout** - CRT-off animation and session management
