@@ -3,6 +3,7 @@ import { useOSStore } from '@/store/useOSStore';
 import { useSoundFX } from '@/hooks/useSoundFX';
 import { useChromaticClick } from '@/hooks/useChromaticClick';
 import ScrambleText from '@/components/fx/ScrambleText';
+import { Spinner } from '@/components/ascii/primitives';
 
 type Phase = 'power-on' | 'post' | 'warping';
 
@@ -24,16 +25,6 @@ const BOOT_ROWS: BootRow[] = [
 
 const LINE_INTERVAL = 140; // ms between each boot row appearing
 const POST_HOLD = 550; // ms to hold once all rows are shown before auto-continuing
-
-const SPIN = '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏';
-const Spinner = () => {
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setI((n) => (n + 1) % SPIN.length), 80);
-    return () => clearInterval(id);
-  }, []);
-  return <span aria-hidden>{SPIN[i]}</span>;
-};
 
 const LandingCard = () => {
   const { setBooting } = useOSStore();

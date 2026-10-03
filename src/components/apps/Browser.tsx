@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { RefreshCw, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Spinner } from '@/components/ascii/primitives';
 
 interface BrowserProps {
   initialUrl?: string;
@@ -20,29 +20,31 @@ const Browser = ({ initialUrl = 'https://google.com' }: BrowserProps) => {
     setIsLoading(true);
   };
 
+  const barBtn = 'px-1.5 text-neon-green hover:bg-neon-green/10 transition-colors';
+
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col bg-bg-panel -m-4">
       {/* Browser Toolbar */}
-      <div className="flex items-center space-x-2 p-2 bg-gray-100 border-b border-gray-200 text-black">
-        <button className="p-1 hover:bg-gray-200 rounded text-gray-600">
-            <ArrowLeft size={16} />
-        </button>
-        <button className="p-1 hover:bg-gray-200 rounded text-gray-600">
-            <ArrowRight size={16} />
-        </button>
-        <button 
-            className="p-1 hover:bg-gray-200 rounded text-gray-600"
+      <div className="flex items-center gap-1 p-2 bg-neon-green/5 border-b border-neon-green/30 font-mono text-xs">
+        <button className={`${barBtn} opacity-40 cursor-not-allowed`} disabled aria-label="Back">[←]</button>
+        <button className={`${barBtn} opacity-40 cursor-not-allowed`} disabled aria-label="Forward">[→]</button>
+        <button
+            aria-label="Reload"
+            className={barBtn}
             onClick={() => { setIsLoading(true); const current = url; setUrl(''); setTimeout(() => setUrl(current), 10); }}
         >
-            <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
+            {isLoading ? <>[<Spinner />]</> : '[↻]'}
         </button>
-        
-        <form onSubmit={handleNavigate} className="flex-1">
-            <input 
-                type="text" 
+
+        <form onSubmit={handleNavigate} className="flex-1 flex items-center border border-neon-green/30 rounded-[3px] bg-black px-2">
+            <span aria-hidden className="text-neon-green/60 mr-2">&gt;</span>
+            <input
+                type="text"
                 value={inputUrl}
                 onChange={(e) => setInputUrl(e.target.value)}
-                className="w-full px-3 py-1 bg-white border border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500 font-sans"
+                aria-label="Address"
+                spellCheck={false}
+                className="w-full py-1 bg-transparent text-white text-xs focus:outline-none font-mono [caret-color:#00ff41]"
             />
         </form>
       </div>
@@ -50,8 +52,8 @@ const Browser = ({ initialUrl = 'https://google.com' }: BrowserProps) => {
       {/* Content */}
       <div className="flex-1 relative">
         {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
-                <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center bg-bg-panel z-10 text-neon-green text-sm tracking-widest">
+                <Spinner className="mr-2 text-xl" /> LOADING
             </div>
         )}
         <iframe 
